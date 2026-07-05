@@ -1,9 +1,7 @@
 const BASE_ID = 'apprSgTHj4HbR7IFB';
 const TABLE_ID = 'tbl7FbKhHAu7SgIyj';
 
-export async function onRequestGet(context) {
-  const { env } = context;
-
+async function handleCats(env) {
   if (!env.AIRTABLE_API_KEY) {
     return new Response(JSON.stringify({ error: 'Server is not configured with an Airtable API key.' }), {
       status: 500,
@@ -45,3 +43,15 @@ export async function onRequestGet(context) {
     },
   });
 }
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === '/api/cats') {
+      return handleCats(env);
+    }
+
+    return env.ASSETS.fetch(request);
+  },
+};
