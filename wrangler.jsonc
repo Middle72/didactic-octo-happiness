@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "didactic-octo-happiness",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-07-05",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  }
+}
