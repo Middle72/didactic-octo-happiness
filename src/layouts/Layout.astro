@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Lucky Penny Kitties is a foster-based cat rescue finding loving homes for cats and kittens in need.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · Lucky Penny Kitties</title>
+    <link rel="stylesheet" href="/global.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="/">🐾 Lucky Penny Kitties</a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/cats">Adoptable Cats</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} Lucky Penny Kitties &middot; bobbykelly.us</p>
+    </footer>
+  </body>
+</html>

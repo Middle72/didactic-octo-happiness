@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Adoptable Cats">
+  <section class="section">
+    <h1>Adoptable Cats</h1>
+    <p>Live data from our Airtable roster. Refresh the page to see the latest status.</p>
+
+    <div id="cats-status" class="status">Loading cats&hellip;</div>
+    <div id="cats-grid" class="cats-grid"></div>
+  </section>
+
+  <script>
+    interface Cat {
+      id: string;
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+      photoUrl: string | null;
+    }
+
+    function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text?: string): HTMLElementTagNameMap[K] {
+      const node = document.createElement(tag);
+      node.className = className;
+      if (text) node.textContent = text;
+      return node;
+    }
+
+    function renderCat(cat: Cat): HTMLElement {
+      const card = el('article', 'cat-card');
+
+      if (cat.photoUrl) {
+        const img = document.createElement('img');
+        img.src = cat.photoUrl;
+        img.alt = cat.name;
+        img.loading = 'lazy';
+        card.appendChild(img);
+      } else {
+        card.appendChild(el('div', 'cat-photo-placeholder', '🐱'));
+      }
+
+      const info = el('div', 'cat-info');
+      info.appendChild(el('h3', '', cat.name));
+      info.appendChild(el('p', 'cat-breed', cat.breed));
+      info.appendChild(el('p', 'cat-meta', [cat.sex, cat.age].filter(Boolean).join(' · ')));
+      info.appendChild(el('span', 'badge', cat.status));
+      card.appendChild(info);
+
+      return card;
+    }
+
+    async function loadCats() {
+      const statusEl = document.getElementById('cats-status')!;
+      const gridEl = document.getElementById('cats-grid')!;
+
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        const cats: Cat[] = await res.json();
+
+        if (cats.length === 0) {
+          statusEl.textContent = 'No cats listed right now — check back soon!';
+          return;
+        }
+
+        statusEl.remove();
+        cats.forEach(cat => gridEl.appendChild(renderCat(cat)));
+      } catch (err) {
+        statusEl.textContent = 'Could not load cats right now. Please try again later.';
+        console.error(err);
+      }
+    }
+
+    loadCats();
+  </script>
+</Layout>
