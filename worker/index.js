@@ -1,3 +1,5 @@
+import { handleNotify } from './notify.js';
+
 const BASE_ID = 'apprSgTHj4HbR7IFB';
 const TABLE_ID = 'tbl7FbKhHAu7SgIyj';
 
@@ -50,6 +52,10 @@ export default {
 
     if (url.pathname === '/api/cats') {
       return handleCats(env);
+    }
+
+    if (url.pathname === '/api/notify') {
+      return handleNotify(request, env);
     }
 
     return env.ASSETS.fetch(request);
