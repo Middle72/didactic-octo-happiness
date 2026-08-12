@@ -212,7 +212,7 @@ main {
 
 .bingo-tv {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 2fr 3fr;
   flex: 1;
   min-height: 0;
   width: 100%;
