@@ -1,52 +1,70 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const PATTERNS = [
+  'Straight Line (Any Row, Column, or Diagonal)',
+  'Four Corners',
+  'Postage Stamp',
+  'Picture Frame (Outside Edge)',
+  'X Pattern',
+  'Small Diamond',
+  'Large Diamond',
+  'Letter T',
+  'Letter L',
+  'Blackout (Full Card)',
+];
 ---
 <Layout title="Bingo Caller" description="Live number caller for the Lucky Penny Kitties bingo fundraiser.">
-  <div class="bingo-tv">
-    <div class="tv-current">
-      <div id="call-letter" class="call-letter">Ready</div>
-      <div id="call-number" class="call-number"></div>
+  <div class="tv-page">
+    <div class="tv-round-bar">
+      <span class="tv-round-label">Now Playing</span>
+      <span id="round-display" class="tv-round-value">{PATTERNS[0]}</span>
     </div>
 
-    <div class="tv-history">
-      <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
-      <div id="history-list" class="tv-history-list"></div>
+    <div class="bingo-tv">
+      <div class="tv-current">
+        <div id="call-letter" class="call-letter">Ready</div>
+        <div id="call-number" class="call-number"></div>
+      </div>
+
+      <div class="tv-history">
+        <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
+        <div id="history-list" class="tv-history-list"></div>
+      </div>
     </div>
   </div>
 
   <div class="tv-controls">
     <button id="call-next" class="cta">Call Next Number</button>
     <button id="reset" class="secondary-btn">Reset Game</button>
+    <select id="round-select" class="round-select">
+      {PATTERNS.map(pattern => <option value={pattern}>{pattern}</option>)}
+    </select>
   </div>
 
   <style is:global>
-    body:has(.bingo-tv) .site-header,
-    body:has(.bingo-tv) .site-footer {
+    body:has(.tv-page) .site-header,
+    body:has(.tv-page) .site-footer {
       display: none;
     }
 
-    body:has(.bingo-tv) {
+    body:has(.tv-page) {
       height: 100%;
       overflow: hidden;
     }
 
-    body:has(.bingo-tv) main {
+    body:has(.tv-page) main {
       max-width: none;
       margin: 0;
       padding: 0;
     }
   </style>
 
-  <script>
-    const LETTERS = ['B', 'I', 'N', 'G', 'O'] as const;
+  <script define:vars={{ PATTERNS }}>
+    const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     const STORAGE_KEY = 'bingo-caller-state';
 
-    interface BingoState {
-      pool: number[];
-      called: number[];
-    }
-
-    function letterFor(n: number): string {
+    function letterFor(n) {
       if (n <= 15) return 'B';
       if (n <= 30) return 'I';
       if (n <= 45) return 'N';
@@ -54,7 +72,7 @@ import Layout from '../layouts/Layout.astro';
       return 'O';
     }
 
-    function shuffledPool(): number[] {
+    function shuffledPool() {
       const pool = Array.from({ length: 75 }, (_, i) => i + 1);
       for (let i = pool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -63,31 +81,36 @@ import Layout from '../layouts/Layout.astro';
       return pool;
     }
 
-    function loadState(): BingoState {
+    function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.pool) && Array.isArray(parsed.called)) return parsed;
+          if (Array.isArray(parsed.pool) && Array.isArray(parsed.called)) {
+            if (!PATTERNS.includes(parsed.round)) parsed.round = PATTERNS[0];
+            return parsed;
+          }
         }
       } catch {
         // fall through to a fresh game
       }
-      return { pool: shuffledPool(), called: [] };
+      return { pool: shuffledPool(), called: [], round: PATTERNS[0] };
     }
 
-    function saveState(state: BingoState) {
+    function saveState(state) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
     let state = loadState();
 
-    const letterEl = document.getElementById('call-letter')!;
-    const numberEl = document.getElementById('call-number')!;
-    const historyTitleEl = document.getElementById('tv-history-title')!;
-    const historyListEl = document.getElementById('history-list')!;
-    const callButton = document.getElementById('call-next') as HTMLButtonElement;
-    const resetButton = document.getElementById('reset') as HTMLButtonElement;
+    const letterEl = document.getElementById('call-letter');
+    const numberEl = document.getElementById('call-number');
+    const historyTitleEl = document.getElementById('tv-history-title');
+    const historyListEl = document.getElementById('history-list');
+    const callButton = document.getElementById('call-next');
+    const resetButton = document.getElementById('reset');
+    const roundDisplayEl = document.getElementById('round-display');
+    const roundSelectEl = document.getElementById('round-select');
 
     function render() {
       const lastCalled = state.called[0];
@@ -117,11 +140,14 @@ import Layout from '../layouts/Layout.astro';
         callButton.disabled = false;
         callButton.textContent = 'Call Next Number';
       }
+
+      roundDisplayEl.textContent = state.round;
+      roundSelectEl.value = state.round;
     }
 
     function callNext() {
       if (state.pool.length === 0) return;
-      const next = state.pool.pop()!;
+      const next = state.pool.pop();
       state.called.unshift(next);
       saveState(state);
       render();
@@ -129,13 +155,20 @@ import Layout from '../layouts/Layout.astro';
 
     function resetGame() {
       if (!confirm('Reset the bingo game? This clears all called numbers.')) return;
-      state = { pool: shuffledPool(), called: [] };
+      state = { pool: shuffledPool(), called: [], round: state.round };
+      saveState(state);
+      render();
+    }
+
+    function changeRound() {
+      state.round = roundSelectEl.value;
       saveState(state);
       render();
     }
 
     callButton.addEventListener('click', callNext);
     resetButton.addEventListener('click', resetGame);
+    roundSelectEl.addEventListener('change', changeRound);
 
     document.addEventListener('keydown', e => {
       if (e.code === 'Space' && document.activeElement !== resetButton) {
