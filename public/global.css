@@ -308,6 +308,8 @@ main {
 .tv-example-video img {
   display: block;
   width: 100%;
+  aspect-ratio: 1122 / 1402;
+  object-fit: cover;
   border-radius: 8px;
 }
 
