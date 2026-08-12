@@ -175,115 +175,112 @@ main {
   border-radius: 999px;
 }
 
-.bingo-caller {
-  text-align: center;
-}
-
-.bingo-current {
-  margin: 1.5rem 0;
-}
-
-.current-call {
-  font-size: clamp(4rem, 18vw, 10rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  color: var(--accent);
-}
-
-.current-count {
-  margin-top: 0.5rem;
-  font-size: 1.1rem;
-  opacity: 0.7;
-}
-
-.bingo-controls {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin: 1.5rem 0;
-}
-
-.bingo-controls .cta {
-  border: none;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
-  cursor: pointer;
-}
-
-.bingo-controls .cta:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.secondary-btn {
-  background: transparent;
-  color: var(--fg);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.recent-calls {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  min-height: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.recent-chip {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.3rem 0.8rem;
-  font-weight: 600;
-  opacity: 0.75;
-}
-
-.bingo-board {
+.bingo-tv {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
-  margin-top: 2rem;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
 }
 
-.bingo-column {
+.tv-current {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  padding: 1rem;
+  overflow: hidden;
 }
 
-.bingo-column-letter {
+.call-letter {
+  font-size: min(16vw, 22vh);
   font-weight: 800;
-  font-size: 1.3rem;
+  line-height: 1;
   color: var(--accent);
-  margin-bottom: 0.25rem;
 }
 
-.bingo-number {
+.call-number {
+  font-size: min(32vw, 46vh);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.tv-history {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 2rem 2rem 5rem;
+}
+
+.tv-history-title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.tv-history-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.history-chip {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0.4rem 0.2rem;
-  font-size: 0.95rem;
-  opacity: 0.5;
+  border-radius: 10px;
+  padding: 0.75rem 0.25rem;
+  text-align: center;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  font-weight: 700;
 }
 
-.bingo-number.called {
-  opacity: 1;
+.history-chip.latest {
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
 }
 
-.bingo-number.just-called {
-  outline: 3px solid var(--fg);
-  outline-offset: 1px;
+.tv-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+}
+
+.tv-controls .cta {
+  border: none;
+  font-size: 1.1rem;
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+}
+
+.tv-controls .cta:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.tv-controls .secondary-btn {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .site-footer {
