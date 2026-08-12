@@ -1,18 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const STRAIGHT_LINE = 'Straight Line (Any Row, Column, or Diagonal)';
+
 const PATTERNS = [
-  'Straight Line (Any Row, Column, or Diagonal)',
-  'Four Corners',
-  'Postage Stamp',
-  'Picture Frame (Outside Edge)',
-  'X Pattern',
-  'Small Diamond',
-  'Large Diamond',
-  'Letter K',
   'Letter L',
   'Letter P',
-  'Letter T',
+  'Letter K',
+  STRAIGHT_LINE,
+  'Four Corners',
   'Blackout (Full Card)',
 ];
 ---
@@ -85,7 +81,7 @@ const PATTERNS = [
     }
   </style>
 
-  <script define:vars={{ PATTERNS }}>
+  <script define:vars={{ PATTERNS, STRAIGHT_LINE }}>
     const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     const STORAGE_KEY = 'bingo-caller-state';
 
@@ -179,7 +175,7 @@ const PATTERNS = [
 
       roundDisplayEl.textContent = state.round;
       roundSelectEl.value = state.round;
-      exampleVideoEl.hidden = state.round !== PATTERNS[0];
+      exampleVideoEl.hidden = state.round !== STRAIGHT_LINE;
 
       const imageSrc = IMAGE_EXAMPLES[state.round];
       if (imageSrc) {
