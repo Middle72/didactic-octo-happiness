@@ -304,7 +304,8 @@ main {
   margin-bottom: 0.35rem;
 }
 
-.tv-example-video video {
+.tv-example-video video,
+.tv-example-video img {
   display: block;
   width: 100%;
   border-radius: 8px;

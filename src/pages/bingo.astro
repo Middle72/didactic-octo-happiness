@@ -39,6 +39,11 @@ const PATTERNS = [
     <video src="/winning-card-example.mp4" autoplay muted loop playsinline></video>
   </div>
 
+  <div id="example-image" class="tv-example-video" hidden>
+    <span class="tv-example-label">Example Winning Card</span>
+    <img src="/four-corners-example.jpg" alt="Example four corners winning bingo card" />
+  </div>
+
   <div class="tv-controls">
     <button id="call-next" class="cta">Call Next Number</button>
     <button id="reset" class="secondary-btn">Reset Game</button>
@@ -129,6 +134,7 @@ const PATTERNS = [
     const roundDisplayEl = document.getElementById('round-display');
     const roundSelectEl = document.getElementById('round-select');
     const exampleVideoEl = document.getElementById('example-video');
+    const exampleImageEl = document.getElementById('example-image');
 
     function render() {
       const lastCalled = state.called[0];
@@ -162,6 +168,7 @@ const PATTERNS = [
       roundDisplayEl.textContent = state.round;
       roundSelectEl.value = state.round;
       exampleVideoEl.hidden = state.round !== PATTERNS[0];
+      exampleImageEl.hidden = state.round !== 'Four Corners';
     }
 
     function callNext() {
