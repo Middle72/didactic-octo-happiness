@@ -9,8 +9,10 @@ const PATTERNS = [
   'X Pattern',
   'Small Diamond',
   'Large Diamond',
-  'Letter T',
+  'Letter K',
   'Letter L',
+  'Letter P',
+  'Letter T',
   'Blackout (Full Card)',
 ];
 ---
@@ -41,7 +43,7 @@ const PATTERNS = [
 
   <div id="example-image" class="tv-example-video" hidden>
     <span class="tv-example-label">Example Winning Card</span>
-    <img src="/four-corners-example.jpg" alt="Example four corners winning bingo card" />
+    <img id="example-image-img" src="" alt="Example winning bingo card" />
   </div>
 
   <div class="tv-controls">
@@ -86,6 +88,14 @@ const PATTERNS = [
   <script define:vars={{ PATTERNS }}>
     const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     const STORAGE_KEY = 'bingo-caller-state';
+
+    const IMAGE_EXAMPLES = {
+      'Four Corners': '/four-corners-example.jpg',
+      'Letter K': '/letter-k-example.jpg',
+      'Letter L': '/letter-l-example.jpg',
+      'Letter P': '/letter-p-example.jpg',
+      'Blackout (Full Card)': '/blackout-example.jpg',
+    };
 
     function letterFor(n) {
       if (n <= 15) return 'B';
@@ -136,6 +146,7 @@ const PATTERNS = [
     const roundSelectEl = document.getElementById('round-select');
     const exampleVideoEl = document.getElementById('example-video');
     const exampleImageEl = document.getElementById('example-image');
+    const exampleImageImgEl = document.getElementById('example-image-img');
 
     function render() {
       const lastCalled = state.called[0];
@@ -169,7 +180,14 @@ const PATTERNS = [
       roundDisplayEl.textContent = state.round;
       roundSelectEl.value = state.round;
       exampleVideoEl.hidden = state.round !== PATTERNS[0];
-      exampleImageEl.hidden = state.round !== 'Four Corners';
+
+      const imageSrc = IMAGE_EXAMPLES[state.round];
+      if (imageSrc) {
+        exampleImageImgEl.src = imageSrc;
+        exampleImageEl.hidden = false;
+      } else {
+        exampleImageEl.hidden = true;
+      }
     }
 
     function callNext() {
