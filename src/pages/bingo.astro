@@ -2,23 +2,40 @@
 import Layout from '../layouts/Layout.astro';
 ---
 <Layout title="Bingo Caller" description="Live number caller for the Lucky Penny Kitties bingo fundraiser.">
-  <section class="section bingo-caller">
-    <h1>Bingo Night</h1>
-
-    <div class="bingo-current">
-      <div id="current-call" class="current-call">Ready</div>
-      <div id="current-count" class="current-count">0 of 75 called</div>
+  <div class="bingo-tv">
+    <div class="tv-current">
+      <div id="call-letter" class="call-letter">Ready</div>
+      <div id="call-number" class="call-number"></div>
     </div>
 
-    <div class="bingo-controls">
-      <button id="call-next" class="cta">Call Next Number</button>
-      <button id="reset" class="secondary-btn">Reset Game</button>
+    <div class="tv-history">
+      <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
+      <div id="history-list" class="tv-history-list"></div>
     </div>
+  </div>
 
-    <div id="recent-calls" class="recent-calls"></div>
+  <div class="tv-controls">
+    <button id="call-next" class="cta">Call Next Number</button>
+    <button id="reset" class="secondary-btn">Reset Game</button>
+  </div>
 
-    <div id="bingo-board" class="bingo-board"></div>
-  </section>
+  <style is:global>
+    body:has(.bingo-tv) .site-header,
+    body:has(.bingo-tv) .site-footer {
+      display: none;
+    }
+
+    body:has(.bingo-tv) {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body:has(.bingo-tv) main {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 
   <script>
     const LETTERS = ['B', 'I', 'N', 'G', 'O'] as const;
@@ -65,61 +82,32 @@ import Layout from '../layouts/Layout.astro';
 
     let state = loadState();
 
-    const currentCallEl = document.getElementById('current-call')!;
-    const currentCountEl = document.getElementById('current-count')!;
-    const recentCallsEl = document.getElementById('recent-calls')!;
-    const boardEl = document.getElementById('bingo-board')!;
+    const letterEl = document.getElementById('call-letter')!;
+    const numberEl = document.getElementById('call-number')!;
+    const historyTitleEl = document.getElementById('tv-history-title')!;
+    const historyListEl = document.getElementById('history-list')!;
     const callButton = document.getElementById('call-next') as HTMLButtonElement;
     const resetButton = document.getElementById('reset') as HTMLButtonElement;
-
-    function buildBoard() {
-      boardEl.innerHTML = '';
-      LETTERS.forEach((letter, colIndex) => {
-        const col = document.createElement('div');
-        col.className = 'bingo-column';
-
-        const heading = document.createElement('div');
-        heading.className = 'bingo-column-letter';
-        heading.textContent = letter;
-        col.appendChild(heading);
-
-        for (let row = 0; row < 15; row++) {
-          const n = colIndex * 15 + row + 1;
-          const cell = document.createElement('div');
-          cell.className = 'bingo-number';
-          cell.dataset.number = String(n);
-          cell.textContent = String(n);
-          col.appendChild(cell);
-        }
-
-        boardEl.appendChild(col);
-      });
-    }
 
     function render() {
       const lastCalled = state.called[0];
 
       if (lastCalled === undefined) {
-        currentCallEl.textContent = 'Ready';
+        letterEl.textContent = 'Ready';
+        numberEl.textContent = '';
       } else {
-        currentCallEl.textContent = `${letterFor(lastCalled)}-${lastCalled}`;
+        letterEl.textContent = letterFor(lastCalled);
+        numberEl.textContent = String(lastCalled);
       }
 
-      currentCountEl.textContent = `${state.called.length} of 75 called`;
+      historyTitleEl.textContent = `Called Numbers · ${state.called.length} of 75`;
 
-      recentCallsEl.innerHTML = '';
-      state.called.slice(1, 6).forEach(n => {
-        const chip = document.createElement('span');
-        chip.className = 'recent-chip';
+      historyListEl.innerHTML = '';
+      state.called.forEach((n, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'history-chip' + (i === 0 ? ' latest' : '');
         chip.textContent = `${letterFor(n)}-${n}`;
-        recentCallsEl.appendChild(chip);
-      });
-
-      const calledSet = new Set(state.called);
-      boardEl.querySelectorAll<HTMLElement>('.bingo-number').forEach(cell => {
-        const n = Number(cell.dataset.number);
-        cell.classList.toggle('called', calledSet.has(n));
-        cell.classList.toggle('just-called', n === lastCalled);
+        historyListEl.appendChild(chip);
       });
 
       if (state.pool.length === 0) {
@@ -156,7 +144,6 @@ import Layout from '../layouts/Layout.astro';
       }
     });
 
-    buildBoard();
     render();
   </script>
 </Layout>
