@@ -43,20 +43,32 @@ const PATTERNS = [
   </div>
 
   <style is:global>
-    body:has(.tv-page) .site-header,
     body:has(.tv-page) .site-footer {
       display: none;
+    }
+
+    html:has(body .tv-page) {
+      height: 100%;
     }
 
     body:has(.tv-page) {
       height: 100%;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body:has(.tv-page) .site-header {
+      flex: 0 0 auto;
     }
 
     body:has(.tv-page) main {
+      flex: 1;
+      min-height: 0;
       max-width: none;
       margin: 0;
       padding: 0;
+      display: flex;
     }
   </style>
 
