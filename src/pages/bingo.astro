@@ -34,7 +34,7 @@ const PATTERNS = [
     </div>
   </div>
 
-  <div class="tv-example-video">
+  <div id="example-video" class="tv-example-video">
     <span class="tv-example-label">Example Winning Card</span>
     <video src="/winning-card-example.mp4" autoplay muted loop playsinline></video>
   </div>
@@ -128,6 +128,7 @@ const PATTERNS = [
     const resetButton = document.getElementById('reset');
     const roundDisplayEl = document.getElementById('round-display');
     const roundSelectEl = document.getElementById('round-select');
+    const exampleVideoEl = document.getElementById('example-video');
 
     function render() {
       const lastCalled = state.called[0];
@@ -160,6 +161,7 @@ const PATTERNS = [
 
       roundDisplayEl.textContent = state.round;
       roundSelectEl.value = state.round;
+      exampleVideoEl.hidden = state.round !== PATTERNS[0];
     }
 
     function callNext() {

@@ -286,7 +286,7 @@ main {
   position: fixed;
   right: 1.5rem;
   bottom: 5.5rem;
-  width: min(22vw, 320px);
+  width: min(33vw, 480px);
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
