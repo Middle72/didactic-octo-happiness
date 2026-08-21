@@ -28,8 +28,13 @@ import Layout from '../layouts/Layout.astro';
       return node;
     }
 
+    function slugify(name: string): string {
+      return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
     function renderCat(cat: Cat): HTMLElement {
       const card = el('article', 'cat-card');
+      card.id = slugify(cat.name);
 
       if (cat.photoUrl) {
         const img = document.createElement('img');
@@ -67,11 +72,24 @@ import Layout from '../layouts/Layout.astro';
 
         statusEl.remove();
         cats.forEach(cat => gridEl.appendChild(renderCat(cat)));
+        jumpToHash();
       } catch (err) {
         statusEl.textContent = 'Could not load cats right now. Please try again later.';
         console.error(err);
       }
     }
+
+    function jumpToHash() {
+      const id = window.location.hash.slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('cat-highlight');
+      setTimeout(() => target.classList.remove('cat-highlight'), 3000);
+    }
+
+    window.addEventListener('hashchange', jumpToHash);
 
     loadCats();
   </script>
