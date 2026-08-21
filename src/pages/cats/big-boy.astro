@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Big Boy" description="Big Boy is a lovable, affectionate goofball looking for his forever home with Lucky Penny Kitties.">
+  <section class="section cat-profile">
+    <a class="back-link" href="/cats">&larr; Back to Adoptable Cats</a>
+
+    <div class="cat-profile-header">
+      <h1>Big Boy</h1>
+      <span id="cat-badge" class="badge" hidden></span>
+    </div>
+
+    <p id="cat-meta" class="cat-profile-meta"></p>
+
+    <div class="cat-gallery">
+      <img src="/cats/big-boy-1.webp" alt="Big Boy the cat" loading="lazy" />
+      <img src="/cats/big-boy-2.jpg" alt="Big Boy the cat" loading="lazy" />
+      <img src="/cats/big-boy-3.webp" alt="Big Boy the cat" loading="lazy" />
+    </div>
+
+    <p class="cat-bio">
+      Big Boy is a lovable, affectionate goofball who doubles as your personal hair stylist,
+      kid entertainer, and nighttime security guard. If you're looking for a cat with a big
+      personality and an even bigger heart, Big Boy is your guy! &#10084;&#65039;
+    </p>
+
+    <a class="cta" href="/cats">See more adoptable cats &rarr;</a>
+  </section>
+
+  <script>
+    interface Cat {
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) return;
+        const cats: Cat[] = await res.json();
+        const cat = cats.find(c => c.name === 'Big Boy');
+        if (!cat) return;
+
+        const badge = document.getElementById('cat-badge');
+        const meta = document.getElementById('cat-meta');
+        if (badge && cat.status) {
+          badge.textContent = cat.status;
+          badge.hidden = false;
+        }
+        if (meta) meta.textContent = [cat.breed, cat.sex, cat.age].filter(Boolean).join(' · ');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadStatus();
+  </script>
+</Layout>
