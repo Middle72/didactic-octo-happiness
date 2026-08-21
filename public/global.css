@@ -127,6 +127,11 @@ main {
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.cat-card.cat-highlight {
+  box-shadow: 0 0 0 4px var(--accent);
 }
 
 .cat-card img {
