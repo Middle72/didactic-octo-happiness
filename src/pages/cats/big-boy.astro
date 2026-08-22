@@ -5,10 +5,16 @@ import Layout from '../../layouts/Layout.astro';
   <section class="section cat-profile">
     <div class="cat-profile-header">
       <h1>Big Boy</h1>
+      <span class="badge">Male</span>
       <span id="cat-badge" class="badge" hidden></span>
     </div>
 
-    <p id="cat-meta" class="cat-profile-meta"></p>
+    <p class="cat-age">~5 years old</p>
+
+    <p class="cat-tagline">
+      Playful, fun-loving, and great with dogs and kids. He's ready to become
+      someone's favorite buddy.
+    </p>
 
     <div class="cat-gallery">
       <img src="/cats/big-boy-1.webp" alt="Big Boy the cat" loading="lazy" />
@@ -41,12 +47,10 @@ import Layout from '../../layouts/Layout.astro';
         if (!cat) return;
 
         const badge = document.getElementById('cat-badge');
-        const meta = document.getElementById('cat-meta');
         if (badge && cat.status) {
           badge.textContent = cat.status;
           badge.hidden = false;
         }
-        if (meta) meta.textContent = [cat.breed, cat.sex, cat.age].filter(Boolean).join(' · ');
       } catch (err) {
         console.error(err);
       }

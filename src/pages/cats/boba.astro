@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Boba" description="Boba is sweet and devoted, and has been a wonderful long-term foster with Lucky Penny Kitties.">
+  <section class="section cat-profile">
+    <div class="cat-profile-header">
+      <h1>Boba</h1>
+      <span class="badge">Female</span>
+      <span id="cat-badge" class="badge" hidden></span>
+    </div>
+
+    <p class="cat-age">~4 years old</p>
+
+    <p class="cat-tagline">
+      Sweet and devoted, Boba has been a wonderful long-term foster.
+    </p>
+
+    <div class="cat-gallery">
+      <img src="/cats/boba-1.jpg" alt="Boba the cat" loading="lazy" />
+    </div>
+  </section>
+
+  <script>
+    interface Cat {
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) return;
+        const cats: Cat[] = await res.json();
+        const cat = cats.find(c => c.name === 'Boba');
+        if (!cat) return;
+
+        const badge = document.getElementById('cat-badge');
+        if (badge && cat.status) {
+          badge.textContent = cat.status;
+          badge.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadStatus();
+  </script>
+</Layout>

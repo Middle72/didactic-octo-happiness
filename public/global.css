@@ -213,11 +213,28 @@ main {
   margin: 0 0 1.5rem;
 }
 
+.cat-age {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+
+.cat-tagline {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
 .cat-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.cat-gallery:has(> img:only-child) {
+  grid-template-columns: minmax(240px, 420px);
 }
 
 .cat-gallery img {
