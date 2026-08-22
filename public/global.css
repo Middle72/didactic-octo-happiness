@@ -181,7 +181,7 @@ main {
 }
 
 .cat-profile {
-  max-width: 800px;
+  max-width: 1065px;
 }
 
 .back-link {
@@ -215,7 +215,7 @@ main {
 
 .cat-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -230,8 +230,8 @@ main {
 }
 
 .cat-bio {
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-size: 2.2rem;
+  line-height: 1.5;
   margin-bottom: 2rem;
 }
 
