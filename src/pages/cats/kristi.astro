@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Kristi" description="Kristi is gentle and affectionate, ready for a loving home of her own with Lucky Penny Kitties.">
+  <section class="section cat-profile">
+    <div class="cat-profile-header">
+      <h1>Kristi</h1>
+      <span class="badge">Female</span>
+      <span id="cat-badge" class="badge" hidden></span>
+    </div>
+
+    <p class="cat-age">13 months old</p>
+
+    <p class="cat-tagline">
+      Gentle and affectionate, ready for a loving home of her own.
+    </p>
+
+    <div class="cat-gallery">
+      <img src="/cats/kristi-1.webp" alt="Kristi the cat" loading="lazy" />
+      <img src="/cats/kristi-2.webp" alt="Kristi the cat" loading="lazy" />
+      <img src="/cats/kristi-3.webp" alt="Kristi the cat" loading="lazy" />
+    </div>
+  </section>
+
+  <script>
+    interface Cat {
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) return;
+        const cats: Cat[] = await res.json();
+        const cat = cats.find(c => c.name === 'Kristi');
+        if (!cat) return;
+
+        const badge = document.getElementById('cat-badge');
+        if (badge && cat.status) {
+          badge.textContent = cat.status;
+          badge.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadStatus();
+  </script>
+</Layout>
