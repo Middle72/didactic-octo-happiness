@@ -419,12 +419,14 @@ main {
 }
 
 .tv-controls .secondary-btn {
+  display: inline-block;
   background: transparent;
   color: var(--fg);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -443,10 +445,9 @@ main {
   flex: 1;
   min-height: 0;
   width: 25%;
-  align-self: flex-start;
+  align-self: flex-end;
   display: flex;
   gap: 0.5rem;
-  padding-bottom: calc(var(--example-w, 0px) * 1.28 + 2.5rem);
 }
 
 .bingo-column {
@@ -475,7 +476,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 6px;
   font-weight: 700;
-  font-size: clamp(0.65rem, 1.5vw, 1.2rem);
+  font-size: clamp(0.8125rem, 1.875vw, 1.5rem);
 }
 
 .bingo-cell.called {

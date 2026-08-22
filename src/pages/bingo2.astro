@@ -58,6 +58,7 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
 
   <div class="tv-controls">
     <button id="call-next" class="cta">Call Next Number</button>
+    <a href="/break" class="secondary-btn">Break &amp; Menu</a>
     <button id="reset" class="secondary-btn">Reset Game</button>
     <select id="round-select" class="round-select">
       {PATTERNS.map(pattern => <option value={pattern}>{pattern}</option>)}
@@ -78,7 +79,7 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      --example-w: min(16vw, 220px);
+      --example-w: min(32vw, 440px);
     }
 
     body:has(.tv-page) .site-header {
@@ -96,6 +97,18 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
 
     body:has(.tv-page) .tv-example-label {
       font-size: 1rem;
+    }
+
+    body:has(#bingo-board) .tv-history-title {
+      text-align: right;
+    }
+
+    body:has(#bingo-board) .tv-history {
+      padding-right: calc(var(--example-w, 0px) + 2rem);
+    }
+
+    body:has(#bingo-board) .bingo-board {
+      width: 34%;
     }
   </style>
 
