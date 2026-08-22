@@ -31,16 +31,18 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
       </div>
 
       <div class="tv-history">
-        <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
-        <div id="bingo-board" class="bingo-board">
-          {LETTERS.map((letter, colIndex) => (
-            <div class="bingo-column">
-              <div class="bingo-column-letter">{letter}</div>
-              {Array.from({ length: 15 }, (_, row) => colIndex * 15 + row + 1).map(n => (
-                <div class="bingo-cell" data-number={n}>{n}</div>
-              ))}
-            </div>
-          ))}
+        <div class="bingo-history-inner">
+          <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
+          <div id="bingo-board" class="bingo-board">
+            {LETTERS.map((letter, colIndex) => (
+              <div class="bingo-column">
+                <div class="bingo-column-letter">{letter}</div>
+                {Array.from({ length: 15 }, (_, row) => colIndex * 15 + row + 1).map(n => (
+                  <div class="bingo-cell" data-number={n}>{n}</div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -99,16 +101,26 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
       font-size: 1rem;
     }
 
-    body:has(#bingo-board) .tv-history-title {
-      text-align: right;
-    }
-
     body:has(#bingo-board) .tv-history {
       padding-right: calc(var(--example-w, 0px) + 2rem);
+      align-items: center;
+    }
+
+    .bingo-history-inner {
+      display: flex;
+      flex-direction: column;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    body:has(#bingo-board) .tv-history-title {
+      text-align: right;
+      white-space: nowrap;
     }
 
     body:has(#bingo-board) .bingo-board {
-      width: 34%;
+      width: clamp(320px, 30vw, 420px);
+      align-self: flex-end;
     }
   </style>
 
