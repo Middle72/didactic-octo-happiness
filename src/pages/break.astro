@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const MENU = [
+  { item: 'Hot Dogs', price: '$2' },
+  { item: 'Chips', price: '$1' },
+  { item: 'Cupcakes', price: '$2' },
+  { item: 'Water', price: '$1' },
+];
+---
+<Layout title="Break Time" description="Snack menu and donation info for the Lucky Penny Kitties bingo fundraiser break.">
+  <div class="tv-page">
+    <div class="break-split">
+      <div class="break-menu">
+        <h1>Snack Break!</h1>
+        <p class="break-subtitle">We'll be back shortly &mdash; grab a bite while you wait.</p>
+
+        <ul class="menu-list">
+          {MENU.map(({ item, price }) => (
+            <li>
+              <span class="menu-item">{item}</span>
+              <span class="menu-dots"></span>
+              <span class="menu-price">{price}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="break-donate">
+        <h2>Support Lucky Penny Kitties</h2>
+        <p class="break-donate-text">
+          Every dollar helps cats and kittens in our foster-based rescue get
+          vetted, vaccinated, and ready for their forever homes.
+        </p>
+        <img src="/donate-qr.png" alt="QR code to donate to Lucky Penny Kitties" class="donate-qr" />
+        <p class="donate-url">luckypennykitties.org/donate</p>
+      </div>
+    </div>
+  </div>
+
+  <style is:global>
+    body:has(.tv-page) .site-footer {
+      display: none;
+    }
+
+    html:has(body .tv-page) {
+      height: 100%;
+    }
+
+    body:has(.tv-page) {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body:has(.tv-page) .site-header {
+      flex: 0 0 auto;
+    }
+
+    body:has(.tv-page) main {
+      flex: 1;
+      min-height: 0;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+  </style>
+</Layout>
