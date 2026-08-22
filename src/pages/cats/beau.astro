@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Beau" description="Beau is a fully vaccinated orange kitten, and the biggest little piggy around, ready to find his forever home with Lucky Penny Kitties.">
+  <section class="section cat-profile">
+    <div class="cat-profile-header">
+      <h1>Beau</h1>
+      <span class="badge">Male</span>
+      <span id="cat-badge" class="badge" hidden></span>
+    </div>
+
+    <p class="cat-age">3 months old</p>
+
+    <p class="cat-tagline">
+      Beau (grey collar) is also the biggest piggy and always the last one
+      left eating once everyone else is done. Very affectionate.
+    </p>
+
+    <div class="cat-gallery">
+      <img src="/cats/beau-1.webp" alt="Beau the kitten" loading="lazy" />
+      <img src="/cats/beau-2.webp" alt="Beau the kitten" loading="lazy" />
+      <img src="/cats/beau-3.webp" alt="Beau the kitten" loading="lazy" />
+      <img src="/cats/beau-4.webp" alt="Beau the kitten" loading="lazy" />
+      <img src="/cats/beau-5.webp" alt="Beau the kitten" loading="lazy" />
+    </div>
+
+    <p class="cat-bio">
+      Beau was born in May of 2026 and is a fully vaccinated orange kitten
+      who's ready to find his forever home!
+    </p>
+
+    <p class="cat-bio">
+      Beau and Chandler are identical twin brothers. They'd make an adorable
+      pair if adopted together, but Beau is confident enough to thrive in a
+      home of his own, too.
+    </p>
+
+    <p class="cat-bio">
+      Beau (gray collar) is the biggest little piggy around! &#127869;&#65039;
+      He's always the last one at the food bowl after everyone else has
+      finished, and once he's full, he's incredibly affectionate. Just like
+      his brother, Beau has never met a stranger!
+    </p>
+
+    <p class="cat-bio">
+      Is Beau the missing piece to your family? &#128062;
+    </p>
+  </section>
+
+  <script>
+    interface Cat {
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) return;
+        const cats: Cat[] = await res.json();
+        const cat = cats.find(c => c.name === 'Beau');
+        if (!cat) return;
+
+        const badge = document.getElementById('cat-badge');
+        if (badge && cat.status) {
+          badge.textContent = cat.status;
+          badge.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadStatus();
+  </script>
+</Layout>
