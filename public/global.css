@@ -445,3 +445,101 @@ main {
   opacity: 0.6;
   font-size: 0.9rem;
 }
+
+.break-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.break-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem;
+  border-right: 1px solid var(--border);
+}
+
+.break-menu h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  margin: 0 0 1rem;
+}
+
+.break-subtitle {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  opacity: 0.75;
+  margin: 0 0 2.5rem;
+}
+
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.menu-list li {
+  display: flex;
+  align-items: baseline;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+}
+
+.menu-item {
+  flex: 0 0 auto;
+}
+
+.menu-dots {
+  flex: 1;
+  border-bottom: 3px dotted var(--border);
+  margin: 0 0.75rem;
+  height: 0.6em;
+}
+
+.menu-price {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.break-donate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.break-donate h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin: 0;
+}
+
+.break-donate-text {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  max-width: 32rem;
+  line-height: 1.5;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.donate-qr {
+  width: min(45vw, 320px);
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 1rem;
+}
+
+.donate-url {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
