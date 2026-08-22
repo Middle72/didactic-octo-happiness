@@ -1,0 +1,248 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const STRAIGHT_LINE = 'Straight Line (Any Row, Column, or Diagonal)';
+
+const PATTERNS = [
+  'Letter L',
+  'Letter P',
+  'Letter K',
+  STRAIGHT_LINE,
+  'Four Corners',
+  'Blackout (Full Card)',
+  'Letter C',
+  'Letter A',
+  'Letter T',
+];
+
+const LETTERS = ['B', 'I', 'N', 'G', 'O'];
+---
+<Layout title="Bingo Board" description="Live number caller with a full lighted bingo board for the Lucky Penny Kitties bingo fundraiser.">
+  <div class="tv-page">
+    <div class="tv-round-bar">
+      <span class="tv-round-label">Now Playing</span>
+      <span id="round-display" class="tv-round-value">{PATTERNS[0]}</span>
+    </div>
+
+    <div class="bingo-tv">
+      <div class="tv-current">
+        <div id="call-letter" class="call-letter">Ready</div>
+        <div id="call-number" class="call-number"></div>
+      </div>
+
+      <div class="tv-history">
+        <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
+        <div id="bingo-board" class="bingo-board">
+          {LETTERS.map((letter, colIndex) => (
+            <div class="bingo-column">
+              <div class="bingo-column-letter">{letter}</div>
+              {Array.from({ length: 15 }, (_, row) => colIndex * 15 + row + 1).map(n => (
+                <div class="bingo-cell" data-number={n}>{n}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="example-video" class="tv-example-video">
+    <span class="tv-example-label">Example Winning Card</span>
+    <video src="/winning-card-example.mp4" autoplay muted loop playsinline></video>
+  </div>
+
+  <div id="example-image" class="tv-example-video" hidden>
+    <span class="tv-example-label">Example Winning Card</span>
+    <img id="example-image-img" src="" alt="Example winning bingo card" />
+  </div>
+
+  <div class="tv-controls">
+    <button id="call-next" class="cta">Call Next Number</button>
+    <button id="reset" class="secondary-btn">Reset Game</button>
+    <select id="round-select" class="round-select">
+      {PATTERNS.map(pattern => <option value={pattern}>{pattern}</option>)}
+    </select>
+  </div>
+
+  <style is:global>
+    body:has(.tv-page) .site-footer {
+      display: none;
+    }
+
+    html:has(body .tv-page) {
+      height: 100%;
+    }
+
+    body:has(.tv-page) {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      --example-w: min(16vw, 220px);
+    }
+
+    body:has(.tv-page) .site-header {
+      flex: 0 0 auto;
+    }
+
+    body:has(.tv-page) main {
+      flex: 1;
+      min-height: 0;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    body:has(.tv-page) .tv-example-label {
+      font-size: 1rem;
+    }
+  </style>
+
+  <script define:vars={{ PATTERNS, STRAIGHT_LINE }}>
+    const LETTERS = ['B', 'I', 'N', 'G', 'O'];
+    const STORAGE_KEY = 'bingo-caller-state';
+
+    const IMAGE_EXAMPLES = {
+      'Four Corners': '/four-corners-example.jpg',
+      'Letter K': '/letter-k-example.jpg',
+      'Letter L': '/letter-l-example.jpg',
+      'Letter P': '/letter-p-example.jpg',
+      'Blackout (Full Card)': '/blackout-example.jpg',
+      'Letter C': '/letter-c-example.jpg',
+      'Letter A': '/letter-a-example.jpg',
+      'Letter T': '/letter-t-example.jpg',
+    };
+
+    function letterFor(n) {
+      if (n <= 15) return 'B';
+      if (n <= 30) return 'I';
+      if (n <= 45) return 'N';
+      if (n <= 60) return 'G';
+      return 'O';
+    }
+
+    function shuffledPool() {
+      const pool = Array.from({ length: 75 }, (_, i) => i + 1);
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.pool) && Array.isArray(parsed.called)) {
+            if (!PATTERNS.includes(parsed.round)) parsed.round = PATTERNS[0];
+            return parsed;
+          }
+        }
+      } catch {
+        // fall through to a fresh game
+      }
+      return { pool: shuffledPool(), called: [], round: PATTERNS[0] };
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+
+    const letterEl = document.getElementById('call-letter');
+    const numberEl = document.getElementById('call-number');
+    const historyTitleEl = document.getElementById('tv-history-title');
+    const boardEl = document.getElementById('bingo-board');
+    const callButton = document.getElementById('call-next');
+    const resetButton = document.getElementById('reset');
+    const roundDisplayEl = document.getElementById('round-display');
+    const roundSelectEl = document.getElementById('round-select');
+    const exampleVideoEl = document.getElementById('example-video');
+    const exampleImageEl = document.getElementById('example-image');
+    const exampleImageImgEl = document.getElementById('example-image-img');
+
+    function updateBoard() {
+      const calledSet = new Set(state.called);
+      const lastCalled = state.called[0];
+      boardEl.querySelectorAll('.bingo-cell').forEach(cell => {
+        const n = Number(cell.dataset.number);
+        cell.classList.toggle('called', calledSet.has(n));
+        cell.classList.toggle('latest', n === lastCalled);
+      });
+    }
+
+    function render() {
+      const lastCalled = state.called[0];
+
+      if (lastCalled === undefined) {
+        letterEl.textContent = 'Ready';
+        numberEl.textContent = '';
+      } else {
+        letterEl.textContent = letterFor(lastCalled);
+        numberEl.textContent = String(lastCalled);
+      }
+
+      historyTitleEl.textContent = `Called Numbers · ${state.called.length} of 75`;
+
+      updateBoard();
+
+      if (state.pool.length === 0) {
+        callButton.disabled = true;
+        callButton.textContent = 'All numbers called!';
+      } else {
+        callButton.disabled = false;
+        callButton.textContent = 'Call Next Number';
+      }
+
+      roundDisplayEl.textContent = state.round;
+      roundSelectEl.value = state.round;
+      exampleVideoEl.hidden = state.round !== STRAIGHT_LINE;
+
+      const imageSrc = IMAGE_EXAMPLES[state.round];
+      if (imageSrc) {
+        exampleImageImgEl.src = imageSrc;
+        exampleImageEl.hidden = false;
+      } else {
+        exampleImageEl.hidden = true;
+      }
+    }
+
+    function callNext() {
+      if (state.pool.length === 0) return;
+      const next = state.pool.pop();
+      state.called.unshift(next);
+      saveState(state);
+      render();
+    }
+
+    function resetGame() {
+      if (!confirm('Reset the bingo game? This clears all called numbers.')) return;
+      state = { pool: shuffledPool(), called: [], round: state.round };
+      saveState(state);
+      render();
+    }
+
+    function changeRound() {
+      state.round = roundSelectEl.value;
+      saveState(state);
+      render();
+    }
+
+    callButton.addEventListener('click', callNext);
+    resetButton.addEventListener('click', resetGame);
+    roundSelectEl.addEventListener('change', changeRound);
+
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space' && document.activeElement !== resetButton) {
+        e.preventDefault();
+        callNext();
+      }
+    });
+
+    render();
+  </script>
+</Layout>
