@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Chandler" description="Chandler is a fully vaccinated orange kitten, curious and outgoing, ready to find his forever home with Lucky Penny Kitties.">
+  <section class="section cat-profile">
+    <div class="cat-profile-header">
+      <h1>Chandler</h1>
+      <span class="badge">Male</span>
+      <span id="cat-badge" class="badge" hidden></span>
+    </div>
+
+    <p class="cat-age">3 months old</p>
+
+    <p class="cat-tagline">
+      Chandler is always the first to greet you. Loves exploring with his brother.
+    </p>
+
+    <div class="cat-gallery">
+      <img src="/cats/chandler-1.webp" alt="Chandler the kitten" loading="lazy" />
+      <img src="/cats/chandler-2.webp" alt="Chandler the kitten" loading="lazy" />
+      <img src="/cats/chandler-3.webp" alt="Chandler the kitten" loading="lazy" />
+    </div>
+
+    <p class="cat-bio">
+      Meet Chandler! &#129505;
+    </p>
+
+    <p class="cat-bio">
+      Chandler was born in May of 2026 and is a fully vaccinated orange kitten
+      who's ready to find his forever home!
+    </p>
+
+    <p class="cat-bio">
+      Chandler and Beau are identical twin brothers. While they'd make a fun
+      pair if adopted together, they're both confident, social boys who can
+      also be adopted separately.
+    </p>
+
+    <p class="cat-bio">
+      Chandler (no collar) is always the first to greet you and is usually
+      leading the way on every adventure with his brother. He's curious,
+      outgoing, and has never met a stranger!
+    </p>
+
+    <p class="cat-bio">
+      Could Chandler be your new best friend? &#128062;
+    </p>
+  </section>
+
+  <script>
+    interface Cat {
+      name: string;
+      breed: string;
+      age: string;
+      sex: string;
+      status: string;
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/cats');
+        if (!res.ok) return;
+        const cats: Cat[] = await res.json();
+        const cat = cats.find(c => c.name === 'Chandler');
+        if (!cat) return;
+
+        const badge = document.getElementById('cat-badge');
+        if (badge && cat.status) {
+          badge.textContent = cat.status;
+          badge.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadStatus();
+  </script>
+</Layout>
