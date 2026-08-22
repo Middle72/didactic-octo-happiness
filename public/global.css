@@ -233,6 +233,10 @@ main {
   margin-bottom: 1.5rem;
 }
 
+.cat-gallery:has(> img:only-child) {
+  grid-template-columns: minmax(240px, 420px);
+}
+
 .cat-gallery img {
   width: 100%;
   aspect-ratio: 3 / 4;
