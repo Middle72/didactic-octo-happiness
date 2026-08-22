@@ -569,7 +569,7 @@ main {
   color: var(--accent);
 }
 
-.break-donate {
+.break-volunteer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -579,12 +579,12 @@ main {
   gap: 1rem;
 }
 
-.break-donate h2 {
+.break-volunteer h2 {
   font-size: clamp(1.8rem, 4vw, 3rem);
   margin: 0;
 }
 
-.break-donate-text {
+.break-volunteer-text {
   font-size: clamp(1.1rem, 2vw, 1.5rem);
   max-width: 32rem;
   line-height: 1.5;
@@ -592,7 +592,7 @@ main {
   margin: 0;
 }
 
-.donate-qr {
+.volunteer-qr {
   width: min(45vw, 320px);
   height: auto;
   border-radius: 12px;
@@ -601,7 +601,7 @@ main {
   padding: 1rem;
 }
 
-.donate-url {
+.volunteer-url {
   font-size: clamp(1.1rem, 2vw, 1.5rem);
   font-weight: 700;
   color: var(--accent);
