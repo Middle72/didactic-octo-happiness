@@ -445,7 +445,7 @@ main {
   flex: 1;
   min-height: 0;
   width: 25%;
-  align-self: flex-start;
+  align-self: flex-end;
   display: flex;
   gap: 0.5rem;
 }

@@ -98,6 +98,18 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     body:has(.tv-page) .tv-example-label {
       font-size: 1rem;
     }
+
+    body:has(#bingo-board) .tv-history-title {
+      text-align: right;
+    }
+
+    body:has(#bingo-board) .tv-history {
+      padding-right: calc(var(--example-w, 0px) + 2rem);
+    }
+
+    body:has(#bingo-board) .bingo-board {
+      width: 34%;
+    }
   </style>
 
   <script define:vars={{ PATTERNS, STRAIGHT_LINE }}>
