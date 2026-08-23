@@ -237,11 +237,15 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     }
 
     function callNext() {
-      if (state.pool.length === 0) return;
+      if (state.pool.length === 0 || callButton.disabled) return;
       const next = state.pool.pop();
       state.called.unshift(next);
       saveState(state);
       render();
+      callButton.disabled = true;
+      setTimeout(() => {
+        if (state.pool.length > 0) callButton.disabled = false;
+      }, 600);
     }
 
     function resetGame() {
