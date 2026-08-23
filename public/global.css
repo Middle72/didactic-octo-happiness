@@ -355,10 +355,22 @@ main {
   font-weight: 700;
 }
 
-.history-chip.latest {
-  background: var(--accent);
+.history-chip.recent-1 {
+  background: #16a34a;
   color: #fff;
-  border-color: var(--accent);
+  border-color: #16a34a;
+}
+
+.history-chip.recent-2 {
+  background: #eab308;
+  color: #2b2320;
+  border-color: #eab308;
+}
+
+.history-chip.recent-3 {
+  background: #ec4899;
+  color: #fff;
+  border-color: #ec4899;
 }
 
 .tv-example-video {
@@ -485,9 +497,22 @@ main {
   border-color: var(--accent);
 }
 
-.bingo-cell.latest {
-  outline: 3px solid var(--fg);
-  outline-offset: -2px;
+.bingo-cell.recent-1 {
+  background: #16a34a;
+  color: #fff;
+  border-color: #16a34a;
+}
+
+.bingo-cell.recent-2 {
+  background: #eab308;
+  color: #2b2320;
+  border-color: #eab308;
+}
+
+.bingo-cell.recent-3 {
+  background: #ec4899;
+  color: #fff;
+  border-color: #ec4899;
 }
 
 .site-footer {

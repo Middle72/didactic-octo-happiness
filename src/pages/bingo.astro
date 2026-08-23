@@ -164,9 +164,10 @@ const PATTERNS = [
       historyTitleEl.textContent = `Called Numbers · ${state.called.length} of 75`;
 
       historyListEl.innerHTML = '';
+      const recentClasses = [' recent-1', ' recent-2', ' recent-3'];
       state.called.forEach((n, i) => {
         const chip = document.createElement('div');
-        chip.className = 'history-chip' + (i === 0 ? ' latest' : '');
+        chip.className = 'history-chip' + (recentClasses[i] || '');
         chip.textContent = `${letterFor(n)}-${n}`;
         historyListEl.appendChild(chip);
       });
