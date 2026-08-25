@@ -217,9 +217,11 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
 
       updateBoard();
 
-      if (state.pool.length === 0) {
+      if (!poolHasCallable()) {
         callButton.disabled = true;
-        callButton.textContent = 'All numbers called!';
+        callButton.textContent = state.round === 'Four Corners'
+          ? 'All corner numbers called!'
+          : 'All numbers called!';
       } else {
         callButton.disabled = false;
         callButton.textContent = 'Call Next Number';
@@ -238,15 +240,38 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
       }
     }
 
+    function isCorner(n) {
+      return n <= 15 || n >= 61;
+    }
+
+    function poolHasCallable() {
+      if (state.round === 'Four Corners') {
+        return state.pool.some(isCorner);
+      }
+      return state.pool.length > 0;
+    }
+
+    function drawNext() {
+      if (state.round !== 'Four Corners') {
+        return state.pool.pop();
+      }
+      for (let i = state.pool.length - 1; i >= 0; i--) {
+        if (isCorner(state.pool[i])) {
+          return state.pool.splice(i, 1)[0];
+        }
+      }
+      return undefined;
+    }
+
     function callNext() {
-      if (state.pool.length === 0 || callButton.disabled) return;
-      const next = state.pool.pop();
+      if (!poolHasCallable() || callButton.disabled) return;
+      const next = drawNext();
       state.called.unshift(next);
       saveState(state);
       render();
       callButton.disabled = true;
       setTimeout(() => {
-        if (state.pool.length > 0) callButton.disabled = false;
+        if (poolHasCallable()) callButton.disabled = false;
       }, 600);
     }
 
