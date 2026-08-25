@@ -333,46 +333,6 @@ main {
   font-weight: 600;
 }
 
-.tv-history-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(5.625rem, 1fr));
-  gap: 0.6rem;
-  align-content: start;
-  padding-right: calc(var(--example-w, 0px) + 0.5rem);
-  padding-bottom: calc(var(--example-w, 0px) * 1.28 + 2.5rem);
-}
-
-.history-chip {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 0.6rem 0.22rem;
-  text-align: center;
-  font-size: clamp(1.2rem, 2.1vw, 1.8rem);
-  font-weight: 700;
-}
-
-.history-chip.recent-1 {
-  background: #16a34a;
-  color: #fff;
-  border-color: #16a34a;
-}
-
-.history-chip.recent-2 {
-  background: #eab308;
-  color: #2b2320;
-  border-color: #eab308;
-}
-
-.history-chip.recent-3 {
-  background: #ec4899;
-  color: #fff;
-  border-color: #ec4899;
-}
-
 .tv-example-video {
   position: fixed;
   right: 1.5rem;

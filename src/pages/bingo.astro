@@ -14,8 +14,10 @@ const PATTERNS = [
   'Letter A',
   'Letter T',
 ];
+
+const LETTERS = ['B', 'I', 'N', 'G', 'O'];
 ---
-<Layout title="Bingo Caller" description="Live number caller for the Lucky Penny Kitties bingo fundraiser.">
+<Layout title="Bingo Board" description="Live number caller with a full lighted bingo board for the Lucky Penny Kitties bingo fundraiser.">
   <div class="tv-page">
     <div class="tv-round-bar">
       <span class="tv-round-label">Now Playing</span>
@@ -29,8 +31,19 @@ const PATTERNS = [
       </div>
 
       <div class="tv-history">
-        <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
-        <div id="history-list" class="tv-history-list"></div>
+        <div class="bingo-history-inner">
+          <h2 class="tv-history-title" id="tv-history-title">Called Numbers &middot; 0 of 75</h2>
+          <div id="bingo-board" class="bingo-board">
+            {LETTERS.map((letter, colIndex) => (
+              <div class="bingo-column">
+                <div class="bingo-column-letter">{letter}</div>
+                {Array.from({ length: 15 }, (_, row) => colIndex * 15 + row + 1).map(n => (
+                  <div class="bingo-cell" data-number={n}>{n}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -47,6 +60,7 @@ const PATTERNS = [
 
   <div class="tv-controls">
     <button id="call-next" class="cta">Call Next Number</button>
+    <a href="/break" class="secondary-btn">Break &amp; Menu</a>
     <button id="reset" class="secondary-btn">Reset Game</button>
     <select id="round-select" class="round-select">
       {PATTERNS.map(pattern => <option value={pattern}>{pattern}</option>)}
@@ -67,7 +81,7 @@ const PATTERNS = [
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      --example-w: min(33vw, 480px);
+      --example-w: min(32vw, 440px);
     }
 
     body:has(.tv-page) .site-header {
@@ -81,6 +95,32 @@ const PATTERNS = [
       margin: 0;
       padding: 0;
       display: flex;
+    }
+
+    body:has(.tv-page) .tv-example-label {
+      font-size: 1rem;
+    }
+
+    body:has(#bingo-board) .tv-history {
+      padding-right: calc(var(--example-w, 0px) + 2rem);
+      align-items: center;
+    }
+
+    .bingo-history-inner {
+      display: flex;
+      flex-direction: column;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    body:has(#bingo-board) .tv-history-title {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    body:has(#bingo-board) .bingo-board {
+      width: clamp(320px, 30vw, 420px);
+      align-self: flex-end;
     }
   </style>
 
@@ -141,7 +181,7 @@ const PATTERNS = [
     const letterEl = document.getElementById('call-letter');
     const numberEl = document.getElementById('call-number');
     const historyTitleEl = document.getElementById('tv-history-title');
-    const historyListEl = document.getElementById('history-list');
+    const boardEl = document.getElementById('bingo-board');
     const callButton = document.getElementById('call-next');
     const resetButton = document.getElementById('reset');
     const roundDisplayEl = document.getElementById('round-display');
@@ -149,6 +189,18 @@ const PATTERNS = [
     const exampleVideoEl = document.getElementById('example-video');
     const exampleImageEl = document.getElementById('example-image');
     const exampleImageImgEl = document.getElementById('example-image-img');
+
+    function updateBoard() {
+      const calledSet = new Set(state.called);
+      const [recent1, recent2, recent3] = state.called;
+      boardEl.querySelectorAll('.bingo-cell').forEach(cell => {
+        const n = Number(cell.dataset.number);
+        cell.classList.toggle('called', calledSet.has(n));
+        cell.classList.toggle('recent-1', n === recent1);
+        cell.classList.toggle('recent-2', n === recent2);
+        cell.classList.toggle('recent-3', n === recent3);
+      });
+    }
 
     function render() {
       const lastCalled = state.called[0];
@@ -163,14 +215,7 @@ const PATTERNS = [
 
       historyTitleEl.textContent = `Called Numbers · ${state.called.length} of 75`;
 
-      historyListEl.innerHTML = '';
-      const recentClasses = [' recent-1', ' recent-2', ' recent-3'];
-      state.called.forEach((n, i) => {
-        const chip = document.createElement('div');
-        chip.className = 'history-chip' + (recentClasses[i] || '');
-        chip.textContent = `${letterFor(n)}-${n}`;
-        historyListEl.appendChild(chip);
-      });
+      updateBoard();
 
       if (state.pool.length === 0) {
         callButton.disabled = true;
