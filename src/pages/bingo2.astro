@@ -192,11 +192,13 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
 
     function updateBoard() {
       const calledSet = new Set(state.called);
-      const lastCalled = state.called[0];
+      const [recent1, recent2, recent3] = state.called;
       boardEl.querySelectorAll('.bingo-cell').forEach(cell => {
         const n = Number(cell.dataset.number);
         cell.classList.toggle('called', calledSet.has(n));
-        cell.classList.toggle('latest', n === lastCalled);
+        cell.classList.toggle('recent-1', n === recent1);
+        cell.classList.toggle('recent-2', n === recent2);
+        cell.classList.toggle('recent-3', n === recent3);
       });
     }
 
@@ -237,11 +239,15 @@ const LETTERS = ['B', 'I', 'N', 'G', 'O'];
     }
 
     function callNext() {
-      if (state.pool.length === 0) return;
+      if (state.pool.length === 0 || callButton.disabled) return;
       const next = state.pool.pop();
       state.called.unshift(next);
       saveState(state);
       render();
+      callButton.disabled = true;
+      setTimeout(() => {
+        if (state.pool.length > 0) callButton.disabled = false;
+      }, 600);
     }
 
     function resetGame() {
