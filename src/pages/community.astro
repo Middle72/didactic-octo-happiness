@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const CDN = 'https://cdn.shopify.com/s/files/1/0557/7968/8547/files/';
+
+const HIGHLIGHTS = [
+  {
+    image: 'Business_Suite_creation_789250773673752_2.jpg?v=1759281193',
+    caption: 'Waverly',
+    heading: 'Redeemer Lutheran Church',
+    text: 'The kids of RLC put on a bake sale fundraiser for us!',
+  },
+  {
+    image: '20251102_135811_2.jpg?v=1767985409',
+    caption: 'Waverly',
+    heading: 'Girl Scouts',
+    text: 'We spoke to and engaged with an amazing group of girls in this Girl Scout Troop. They are all shining stars and have bright futures with big, caring hearts!',
+  },
+  {
+    image: '1000111771.jpg?v=1759280924',
+    caption: 'Waverly',
+    heading: 'HyVee',
+    text: 'HyVee Floral put on a month long fundraiser for us!',
+  },
+  {
+    image: 'AirBrush_20250708121346.jpg?v=1759281196',
+    caption: 'Waverly',
+    heading: 'Ivy Ink',
+    text: 'Ivy Ink Tattoos had TWO flash sale tattoo fundraising events for us! One in July and one in August!',
+  },
+  {
+    image: 'AirBrush_20250904163905.jpg?v=1759281231',
+    caption: 'Waterloo',
+    heading: 'Hydrite Helps',
+    text: 'Hydrite Helps has donated monetarily, in kind, and with volunteer work. We are so grateful for their partnership!',
+  },
+  {
+    image: '1000109913.jpg?v=1758546407',
+    caption: 'First Annual Cy-Hawk Tailgate Party',
+    heading: 'Lucky the Cat',
+    text: 'Lucky the Cat, our fun mascot, proudly displaying one of our yard signs!',
+  },
+  {
+    image: 'AlexisRosePhotography-227.jpg?v=1749434748',
+    caption: "LPK's Kick off to Summer Bash 2025",
+    heading: 'Kitten Love',
+    text: 'Everyone loved all the kittens and gave them so many kitten snuggles at our first annual, family fun in the park, fundraiser!',
+  },
+];
+---
+<Layout title="Our Community" description="Community involvement is at the heart of everything Lucky Penny Kitties does — see the local businesses, schools, and neighbors who support our mission.">
+  <section class="page-intro">
+    <h1>We Love Our Community!</h1>
+    <p>
+      Community involvement is at the heart of <em>everything</em> we do. We are proud to work
+      alongside local businesses, schools, organizations, and individuals who support our mission
+      through volunteering, fundraising, education, and outreach.
+    </p>
+    <p>
+      <strong>Together</strong>, we create a stronger, more compassionate community while giving
+      cats and kittens the care, love, and second chances they deserve. Whether you donate, foster,
+      volunteer, attend events, or simply share our story, your involvement truly makes a
+      difference 🐾
+    </p>
+  </section>
+
+  <section class="section community-grid">
+    {HIGHLIGHTS.map(item => (
+      <div class="community-card">
+        <img src={`${CDN}${item.image}`} alt={item.heading} loading="lazy" />
+        <span class="caption">{item.caption}</span>
+        <h3>{item.heading}</h3>
+        <p>{item.text}</p>
+      </div>
+    ))}
+  </section>
+</Layout>

@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = true;
+
+const BASE_ID = 'apprSgTHj4HbR7IFB';
+const TABLE_ID = 'tbl7FbKhHAu7SgIyj';
+
+interface AirtableCat {
+  name: string;
+  breed: string;
+  age: string;
+  sex: string;
+  status: string;
+  photos: string[];
+}
+
+function slugify(name: string): string {
+  return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+// Hand-written profiles for cats we already have real bios/photos for.
+// Any cat in Airtable without an entry here still gets a page automatically,
+// using its Airtable photos and a simple generated intro.
+const PROFILES: Record<string, { tagline: string; bios: string[]; photos: string[] }> = {
+  beau: {
+    tagline: "Beau (grey collar) is also the biggest piggy and always the last one left eating once everyone else is done. Very affectionate.",
+    bios: [
+      "Beau was born in May of 2026 and is a fully vaccinated orange kitten who's ready to find his forever home!",
+      "Beau and Chandler are identical twin brothers. They'd make an adorable pair if adopted together, but Beau is confident enough to thrive in a home of his own, too.",
+      "Beau (gray collar) is the biggest little piggy around! 🍕 He's always the last one at the food bowl after everyone else has finished, and once he's full, he's incredibly affectionate. Just like his brother, Beau has never met a stranger!",
+      "Is Beau the missing piece to your family? 🐾",
+    ],
+    photos: ['/cats/beau-1.webp', '/cats/beau-2.webp', '/cats/beau-3.webp', '/cats/beau-4.webp', '/cats/beau-5.webp'],
+  },
+  'big-boy': {
+    tagline: "Playful, fun-loving, and great with dogs and kids. He's ready to become someone's favorite buddy.",
+    bios: [
+      "Big Boy is a lovable, affectionate goofball who doubles as your personal hair stylist, kid entertainer, and nighttime security guard. If you're looking for a cat with a big personality and an even bigger heart, Big Boy is your guy! ❤️",
+    ],
+    photos: ['/cats/big-boy-1.webp', '/cats/big-boy-2.jpg', '/cats/big-boy-3.webp'],
+  },
+  boba: {
+    tagline: 'Sweet and devoted, Boba has been a wonderful long-term foster.',
+    bios: [],
+    photos: ['/cats/boba-1.webp', '/cats/boba-2.webp'],
+  },
+  chandler: {
+    tagline: 'Chandler is always the first to greet you. Loves exploring with his brother.',
+    bios: [
+      'Meet Chandler! 💙',
+      "Chandler was born in May of 2026 and is a fully vaccinated orange kitten who's ready to find his forever home!",
+      "Chandler and Beau are identical twin brothers. While they'd make a fun pair if adopted together, they're both confident, social boys who can also be adopted separately.",
+      "Chandler (no collar) is always the first to greet you and is usually leading the way on every adventure with his brother. He's curious, outgoing, and has never met a stranger!",
+      'Could Chandler be your new best friend? 🐾',
+    ],
+    photos: ['/cats/chandler-1.webp', '/cats/chandler-2.webp', '/cats/chandler-3.webp'],
+  },
+  kristi: {
+    tagline: 'Gentle and affectionate, ready for a loving home of her own.',
+    bios: [],
+    photos: ['/cats/kristi-1.webp', '/cats/kristi-2.webp', '/cats/kristi-3.webp'],
+  },
+};
+
+export async function getStaticPaths() {
+  const apiKey = process.env.AIRTABLE_API_KEY;
+  if (!apiKey) {
+    console.warn('AIRTABLE_API_KEY not set at build time — cat detail pages will not be generated.');
+    return [];
+  }
+
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?fields%5B%5D=Name&fields%5B%5D=Breed&fields%5B%5D=Photos&fields%5B%5D=Status&fields%5B%5D=Sex&fields%5B%5D=Age`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } });
+  if (!res.ok) {
+    console.warn(`Airtable fetch failed at build time (${res.status}) — cat detail pages will not be generated.`);
+    return [];
+  }
+
+  const data: { records: Array<{ fields: Record<string, any> }> } = await res.json();
+
+  const cats: AirtableCat[] = (data.records ?? [])
+    .filter(record => record.fields.Name)
+    .map(record => ({
+      name: record.fields.Name ?? '',
+      breed: record.fields.Breed ?? '',
+      age: record.fields.Age ?? '',
+      sex: record.fields.Sex?.name ?? '',
+      status: record.fields.Status?.name ?? '',
+      photos: (record.fields.Photos ?? []).map((p: any) => p.thumbnails?.large?.url ?? p.url).filter(Boolean),
+    }));
+
+  return cats.map(cat => ({
+    params: { slug: slugify(cat.name) },
+    props: { cat },
+  }));
+}
+
+const { cat } = Astro.props as { cat: AirtableCat };
+const slug = slugify(cat.name);
+const profile = PROFILES[slug];
+const photos = profile?.photos?.length ? profile.photos : cat.photos;
+const tagline = profile?.tagline ?? `${cat.breed || 'A sweet cat'} looking for a loving home with Lucky Penny Kitties.`;
+const bios = profile?.bios?.length ? profile.bios : [];
+---
+<Layout title={cat.name} description={`${cat.name} is available for adoption through Lucky Penny Kitties. ${tagline}`}>
+  <section class="section cat-profile">
+    <div class="cat-profile-header">
+      <h1>{cat.name}</h1>
+      {cat.sex && <span class="badge">{cat.sex}</span>}
+      {cat.status && <span class="badge">{cat.status}</span>}
+    </div>
+
+    {cat.age && <p class="cat-age">{cat.age}</p>}
+
+    <p class="cat-tagline">{tagline}</p>
+
+    {photos.length > 0 && (
+      <div class="cat-gallery">
+        {photos.map(src => (
+          <img src={src} alt={`${cat.name} the cat`} loading="lazy" />
+        ))}
+      </div>
+    )}
+
+    {bios.map(paragraph => <p class="cat-bio">{paragraph}</p>)}
+
+    <div class="button-row">
+      <a href="/contact" class="cta">Ask About {cat.name}</a>
+      <a href="/cats" class="cta cta--secondary">See All Cats</a>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const CDN = 'https://cdn.shopify.com/s/files/1/0557/7968/8547/files/';
+
+const FEATURED = [
+  {
+    name: 'Amosson Chiropractic',
+    image: '1000106596.jpg?v=1757360613',
+    link: 'https://share.google/0KlOfyRsMDbYU0BT8',
+    bio: "Welcome to Amosson Chiropractic where we take a complete approach to your healthcare in order to pave the way to a healthier you. Our friendly staff strives to provide all of our patients with quality cost effective care. We can treat every member of your family- infants, children, teenagers, adults, moms-to-be, and seniors too! Serving the Cedar Valley since 1998!",
+  },
+  {
+    name: 'Paws on Your Heart Rescue Support',
+    image: '1000132656.jpg?v=1771271836',
+    link: 'https://www.facebook.com/share/1KKZMki9TD/',
+    bio: "This beautiful group was LPK's \"yes\" to our many applied-for grants! They believe in us and give more than just monetary support — they are a community of cheerleaders, a network for help and guidance, and a listening ear whenever we need it.",
+  },
+  {
+    name: "Dr. Elsey's",
+    image: '3448.png?v=1774289097',
+    link: 'https://drelseysonline.com',
+    bio: '',
+  },
+  {
+    name: 'Root Pretty',
+    image: 'root.jpg?v=1739202616',
+    link: 'https://www.rootpretty.com/',
+    bio: '',
+  },
+  {
+    name: 'TheraPetMD',
+    image: '3454.jpg?v=1774289534',
+    link: 'https://therapetmd.com/collections/cat',
+    bio: '',
+  },
+];
+
+const MORE_SPONSORS = [
+  { image: '1000106597.jpg?v=1757362035', link: 'https://share.google/hNLhypK5bO7bUKdpc' },
+  { image: '1000111765.png?v=1759276137', link: 'https://share.google/behHWJRcK8VlUSrJW' },
+  { image: '1000106598.png?v=1757362214', link: 'https://share.google/GrNzGIAP9lXg0mvga' },
+  { image: '1000106599.jpg?v=1757362400', link: 'https://share.google/54ccLjNFfVp9tbVdO' },
+  { image: '484491837_963464729315234_3377703343281760316_n.jpg?v=1742942578', link: 'https://share.google/cHqLyjpCN6eySIV2t' },
+];
+---
+<Layout title="Our Sponsors" description="We are incredibly grateful for the businesses, organizations, and individuals who stand beside Lucky Penny Kitties and make our lifesaving work possible.">
+  <section class="page-intro">
+    <h1>Our Incredible Sponsors</h1>
+    <p>
+      We are incredibly grateful for the businesses, organizations, and individuals who stand
+      beside us and make our lifesaving work possible. Our sponsors play a vital role in allowing
+      us to provide medical care, safe foster homes, food, litter, and daily essentials for cats
+      and kittens in need.
+    </p>
+    <p>
+      Because of your generosity, our rescues are given more than just a second chance—they are
+      given love, comfort, and the opportunity to thrive in a home environment while they wait for
+      their forever families.
+    </p>
+    <p>From the bottom of our hearts, thank you for believing in our mission 🩷🐾</p>
+  </section>
+
+  <section class="section">
+    {FEATURED.map(sponsor => (
+      <div class="sponsor-featured">
+        <img src={`${CDN}${sponsor.image}`} alt={sponsor.name} loading="lazy" />
+        <div class="sponsor-body">
+          <h2>{sponsor.name}</h2>
+          {sponsor.bio && <p>{sponsor.bio}</p>}
+          <a href={sponsor.link} target="_blank" rel="noopener" class="cta cta--secondary">Check them out</a>
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="section">
+    <h2 style="text-align:center;">More of Our Sponsors</h2>
+    <div class="sponsors-grid">
+      {MORE_SPONSORS.map(sponsor => (
+        <a class="sponsor-card" href={sponsor.link} target="_blank" rel="noopener">
+          <img src={`${CDN}${sponsor.image}`} alt="Lucky Penny Kitties sponsor" loading="lazy" />
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

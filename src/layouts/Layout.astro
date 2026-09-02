@@ -21,12 +21,15 @@ const { title, description = 'Lucky Penny Kitties is a foster-based cat rescue f
       <nav class="nav">
         <a class="brand" href="/">🐾 Lucky Penny Kitties</a>
         <div class="nav-links">
+          <a href="/cats">Adopt</a>
+          <a href="/foster">Foster</a>
+          <a href="/volunteer">Volunteer</a>
+          <a href="/events">Events</a>
+          <a href="/sponsors">Sponsors</a>
+          <a href="/community">Community</a>
+          <a href="/donate">Donate</a>
+          <a href="/contact">Contact</a>
           <a href="/bingo">Bingo</a>
-          <a href="/cats/big-boy">Big Boy</a>
-          <a href="/cats/boba">Boba</a>
-          <a href="/cats/kristi">Kristi</a>
-          <a href="/cats/beau">Beau</a>
-          <a href="/cats/chandler">Chandler</a>
         </div>
       </nav>
     </header>
@@ -34,6 +37,7 @@ const { title, description = 'Lucky Penny Kitties is a foster-based cat rescue f
       <slot />
     </main>
     <footer class="site-footer">
+      <p><a href="/surrender">Need to surrender a cat?</a></p>
       <p>&copy; {new Date().getFullYear()} Lucky Penny Kitties &middot; bobbykelly.us</p>
     </footer>
   </body>

@@ -33,8 +33,10 @@ import Layout from '../layouts/Layout.astro';
     }
 
     function renderCat(cat: Cat): HTMLElement {
-      const card = el('article', 'cat-card');
-      card.id = slugify(cat.name);
+      const slug = slugify(cat.name);
+      const card = el('a', 'cat-card');
+      card.id = slug;
+      card.href = `/cats/${slug}`;
 
       if (cat.photoUrl) {
         const img = document.createElement('img');

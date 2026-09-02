@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Hand-maintained for now — add new events here as they're scheduled.
+// Only events with a date today or later are shown; past events drop off automatically.
+const EVENTS = [
+  {
+    name: 'BINGO',
+    date: '2026-08-22',
+    time: '12:00 PM - 3:00 PM (doors open 11:30 AM)',
+    location: 'Waverly Public Library, Waverly, IA',
+    description: "Join us for a great time playing Bingo to support Lucky Penny Kitties! All proceeds help cover medical care, food, and supplies for our foster cats and kittens. We will be serving hot dogs, chips, treats and water! Please no outside food or drinks.",
+    signupLink: 'https://facebook.com/events/s/lpks-bingo-bash/1810220436321456/',
+  },
+];
+
+const today = new Date().toISOString().slice(0, 10);
+const upcoming = EVENTS.filter(e => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+
+function formatDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+<Layout title="Upcoming Events" description="See what's coming up and how you can join Lucky Penny Kitties.">
+  <section class="page-intro">
+    <h1>Upcoming Events</h1>
+    <p>Come say hi, have some fun, and help us raise funds and awareness for Lucky Penny Kitties. Here's what's coming up!</p>
+  </section>
+
+  {upcoming.length > 0 ? (
+    <div class="events-grid">
+      {upcoming.map(event => (
+        <div class="event-card">
+          <div class="event-card-body">
+            <span class="eyebrow">{formatDate(event.date)}{event.time ? ` · ${event.time}` : ''}</span>
+            <h3>{event.name}</h3>
+            {event.location && (
+              <p>
+                📍 <a class="location" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`} target="_blank" rel="noopener">{event.location}</a>
+              </p>
+            )}
+            <p>{event.description}</p>
+            {event.signupLink && (
+              <p><a href={event.signupLink} target="_blank" rel="noopener" class="cta">Learn More</a></p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p style="text-align:center;opacity:0.75;padding:2rem 0;">
+      No upcoming events right now — check back soon, or follow us on social media for announcements!
+    </p>
+  )}
+</Layout>

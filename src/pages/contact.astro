@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Contact Us" description="We're a 100% volunteer-run rescue without a staffed phone line, so email is the best way to reach Lucky Penny Kitties.">
+  <section class="page-intro">
+    <h1>Contact Us</h1>
+    <p>
+      We're a 100% volunteer-run rescue without a staffed phone line, so email is the best way to
+      reach us. Fill out the form below and we'll get back to you as soon as we can — please
+      understand that as an all-volunteer team, response times can vary.
+    </p>
+  </section>
+
+  <section class="section" style="max-width:720px;margin-left:auto;margin-right:auto;text-align:center;">
+    <span class="eyebrow">Already know what you need?</span>
+    <p>Skip the general message below and go straight to the right application:</p>
+    <div class="button-row">
+      <a href="https://forms.gle/SXmGV9RfMMXknniC9" target="_blank" rel="noopener" class="cta">Looking to Adopt?</a>
+      <a href="https://forms.gle/t5GYpRueezfhwivv6" target="_blank" rel="noopener" class="cta cta--secondary">Looking to Foster?</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeJC6Ismy7TbKn_jYmzsJmkWO5jvNfHYeZBmqaPZh234FWKAA/viewform" target="_blank" rel="noopener" class="cta cta--secondary">Looking to Volunteer?</a>
+      <a href="/surrender" class="cta cta--secondary">Need to Surrender a Cat?</a>
+    </div>
+  </section>
+
+  <section class="section" style="max-width:560px;margin-left:auto;margin-right:auto;">
+    <h2 style="text-align:center;">Or Send Us a General Message</h2>
+    <form id="contact-form">
+      <div class="field-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required />
+      </div>
+      <div class="field-group">
+        <label for="email">Email <span aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" required />
+      </div>
+      <div class="field-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="8" required></textarea>
+      </div>
+      <div class="button-row">
+        <button type="submit" class="cta">Send Message</button>
+      </div>
+      <p id="contact-fallback" hidden style="text-align:center;opacity:0.75;">
+        Your email app should have opened with this message ready to send. If it didn't, email us
+        directly at <a href="mailto:meow@luckypennykitties.org">meow@luckypennykitties.org</a>.
+      </p>
+    </form>
+  </section>
+
+  <style>
+    .field-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .field-group input,
+    .field-group textarea {
+      font: inherit;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--fg);
+    }
+  </style>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const fallback = document.getElementById('contact-fallback') as HTMLElement;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = (document.getElementById('name') as HTMLInputElement).value;
+      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const message = (document.getElementById('message') as HTMLTextAreaElement).value;
+
+      const subject = encodeURIComponent(`Message from ${name} via luckypennykitties site`);
+      const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+      window.location.href = `mailto:meow@luckypennykitties.org?subject=${subject}&body=${body}`;
+      fallback.hidden = false;
+    });
+  </script>
+</Layout>
