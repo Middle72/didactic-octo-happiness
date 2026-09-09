@@ -10,7 +10,10 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
     <div class="inventory-header">
       <div>
         <h1>BOM-Trace Inventory</h1>
-        <p class="inventory-subtitle">Cabinet <strong>CAB-01</strong> &middot; 4 rows &times; 6 columns</p>
+        <p class="inventory-subtitle">
+          Cabinet <strong>CAB-01</strong> &middot; 4 rows &times; 6 columns
+          &middot; <span id="sync-status" class="sync-status">Loading&hellip;</span>
+        </p>
       </div>
       <input id="inventory-search" type="search" class="inventory-search" placeholder="Search parts or bin&hellip;" />
     </div>
@@ -85,6 +88,57 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
 
     let state = loadState();
     let activeSlot = null;
+    let apiAvailable = false;
+    const syncStatusEl = document.getElementById('sync-status');
+    const syncTimers = {};
+
+    function setSyncStatus(kind) {
+      syncStatusEl.classList.remove('sync-ok', 'sync-offline', 'sync-error');
+      if (kind === 'synced') {
+        syncStatusEl.textContent = 'Synced with Airtable';
+        syncStatusEl.classList.add('sync-ok');
+      } else if (kind === 'error') {
+        syncStatusEl.textContent = 'Sync failed — changes saved locally only';
+        syncStatusEl.classList.add('sync-error');
+      } else {
+        syncStatusEl.textContent = 'Offline (local only)';
+        syncStatusEl.classList.add('sync-offline');
+      }
+    }
+
+    async function syncBinToApi(slot, bin) {
+      if (!apiAvailable) return;
+      try {
+        const res = await fetch('/api/inventory', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ slot, bin: bin.id, ...bin }),
+        });
+        setSyncStatus(res.ok ? 'synced' : 'error');
+      } catch {
+        setSyncStatus('error');
+      }
+    }
+
+    function scheduleSync(slot, bin) {
+      const key = `${slot}-${bin.id}`;
+      clearTimeout(syncTimers[key]);
+      syncTimers[key] = setTimeout(() => syncBinToApi(slot, bin), 800);
+    }
+
+    async function deleteBinFromApi(slot, binId) {
+      if (!apiAvailable) return;
+      try {
+        const res = await fetch('/api/inventory', {
+          method: 'DELETE',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ slot, bin: binId }),
+        });
+        setSyncStatus(res.ok ? 'synced' : 'error');
+      } catch {
+        setSyncStatus('error');
+      }
+    }
 
     const gridEl = document.getElementById('inventory-grid');
     const searchEl = document.getElementById('inventory-search');
@@ -197,18 +251,19 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
           </div>
         `;
 
-        row.querySelector('.bin-part').addEventListener('input', e => { bin.part = e.target.value; persist(); });
-        row.querySelector('.bin-qty').addEventListener('input', e => { bin.qty = Number(e.target.value) || 0; persist(); });
-        row.querySelector('.bin-min').addEventListener('input', e => { bin.min = Number(e.target.value) || 0; persist(); });
-        row.querySelector('.bin-distributor').addEventListener('input', e => { bin.distributor = e.target.value; persist(); });
-        row.querySelector('.bin-order').addEventListener('input', e => { bin.orderId = e.target.value; persist(); });
-        row.querySelector('.bin-cost').addEventListener('input', e => { bin.unitCost = Number(e.target.value) || 0; persist(); });
+        row.querySelector('.bin-part').addEventListener('input', e => { bin.part = e.target.value; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-qty').addEventListener('input', e => { bin.qty = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-min').addEventListener('input', e => { bin.min = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-distributor').addEventListener('input', e => { bin.distributor = e.target.value; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-order').addEventListener('input', e => { bin.orderId = e.target.value; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-cost').addEventListener('input', e => { bin.unitCost = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
 
         row.querySelector('.bin-checkin').addEventListener('click', () => {
           const amount = Number(prompt('Quantity received:', '1'));
           if (Number.isFinite(amount) && amount > 0) {
             bin.qty = (bin.qty || 0) + amount;
             persist();
+            syncBinToApi(activeSlot, bin);
           }
         });
 
@@ -217,13 +272,16 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
           if (Number.isFinite(amount) && amount > 0) {
             bin.qty = Math.max(0, (bin.qty || 0) - amount);
             persist();
+            syncBinToApi(activeSlot, bin);
           }
         });
 
         row.querySelector('.modal-bin-remove').addEventListener('click', () => {
           if (!confirm(`Remove sub-compartment ${bin.id}?`)) return;
-          state[activeSlot].bins = binsFor(activeSlot).filter(b => b.id !== bin.id);
+          const slot = activeSlot;
+          state[slot].bins = binsFor(slot).filter(b => b.id !== bin.id);
           persist();
+          deleteBinFromApi(slot, bin.id);
         });
 
         modalBinsEl.appendChild(row);
@@ -264,12 +322,32 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
     addBinEl.addEventListener('click', () => {
       const letter = nextBinLetter(activeSlot);
       if (!letter) return;
-      state[activeSlot].bins.push({ id: letter, part: '', qty: 0, min: 0, distributor: '', orderId: '', unitCost: 0 });
+      const bin = { id: letter, part: '', qty: 0, min: 0, distributor: '', orderId: '', unitCost: 0 };
+      state[activeSlot].bins.push(bin);
       persist();
+      syncBinToApi(activeSlot, bin);
     });
 
     searchEl.addEventListener('input', renderGrid);
 
     renderGrid();
+
+    (async () => {
+      try {
+        const res = await fetch('/api/inventory');
+        if (res.ok) {
+          state = await res.json();
+          apiAvailable = true;
+          saveState(state);
+          setSyncStatus('synced');
+          renderGrid();
+          if (activeSlot) renderModal();
+          return;
+        }
+      } catch {
+        // fall through to offline mode
+      }
+      setSyncStatus('offline');
+    })();
   </script>
 </Layout>
