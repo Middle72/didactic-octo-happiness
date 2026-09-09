@@ -1,0 +1,275 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const ROWS = ['A', 'B', 'C', 'D'];
+const COLS = [1, 2, 3, 4, 5, 6];
+const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(2, '0')}`));
+---
+<Layout title="Inventory" description="BOM-Trace parts inventory for Cabinet CAB-01.">
+  <section class="section inventory-page">
+    <div class="inventory-header">
+      <div>
+        <h1>BOM-Trace Inventory</h1>
+        <p class="inventory-subtitle">Cabinet <strong>CAB-01</strong> &middot; 4 rows &times; 6 columns</p>
+      </div>
+      <input id="inventory-search" type="search" class="inventory-search" placeholder="Search parts or bin&hellip;" />
+    </div>
+
+    <div id="reorder-banner" class="reorder-banner" hidden>
+      <strong>Reorder needed:</strong> <span id="reorder-list"></span>
+    </div>
+
+    <div id="inventory-grid" class="inventory-grid">
+      {ROWS.map(row => (
+        <div class="inventory-row">
+          <div class="inventory-row-label">Row {row}</div>
+          <div class="inventory-row-slots">
+            {COLS.map(col => {
+              const id = `${row}${String(col).padStart(2, '0')}`;
+              return (
+                <button type="button" class="inventory-slot" data-slot={id}>
+                  <span class="inventory-slot-id">{id}</span>
+                  <span class="inventory-slot-summary">Empty</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <details class="inventory-labels">
+      <summary>Print drawer labels</summary>
+      <p class="inventory-labels-note">
+        Each label's QR code points to this page. Print and affix one to each drawer &mdash;
+        the text beneath identifies the slot for your own reference.
+      </p>
+      <div class="inventory-labels-grid">
+        {SLOTS.map(id => (
+          <a href={`/inventory-labels/CAB-01-${id}.png`} download class="inventory-label-link">{id}</a>
+        ))}
+      </div>
+    </details>
+  </section>
+
+  <div id="slot-modal" class="inventory-modal" hidden>
+    <div class="inventory-modal-backdrop"></div>
+    <div class="inventory-modal-panel">
+      <button type="button" id="modal-close" class="inventory-modal-close" aria-label="Close">&times;</button>
+      <h2 id="modal-slot-id">CAB-01-A01</h2>
+      <div id="modal-bins" class="modal-bins"></div>
+      <button type="button" id="add-bin" class="secondary-btn">+ Add sub-compartment</button>
+    </div>
+  </div>
+
+  <script define:vars={{ SLOTS }}>
+    const STORAGE_KEY = 'bom-trace-cab-01';
+    const BIN_LETTERS = ['A', 'B', 'C', 'D'];
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') return parsed;
+        }
+      } catch {
+        // fall through to a fresh state
+      }
+      return {};
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+    let activeSlot = null;
+
+    const gridEl = document.getElementById('inventory-grid');
+    const searchEl = document.getElementById('inventory-search');
+    const reorderBanner = document.getElementById('reorder-banner');
+    const reorderList = document.getElementById('reorder-list');
+    const modalEl = document.getElementById('slot-modal');
+    const modalSlotIdEl = document.getElementById('modal-slot-id');
+    const modalBinsEl = document.getElementById('modal-bins');
+    const modalCloseEl = document.getElementById('modal-close');
+    const addBinEl = document.getElementById('add-bin');
+
+    function binsFor(slot) {
+      return (state[slot] && state[slot].bins) || [];
+    }
+
+    function isLowStock(bin) {
+      return bin.min > 0 && bin.qty < bin.min;
+    }
+
+    function slotSummary(slot) {
+      const bins = binsFor(slot).filter(b => b.part);
+      if (bins.length === 0) return { text: 'Empty', low: false };
+      const low = bins.some(isLowStock);
+      const text = bins.length === 1 ? bins[0].part : `${bins.length} parts`;
+      return { text, low };
+    }
+
+    function renderGrid() {
+      const query = searchEl.value.trim().toLowerCase();
+      const reorderItems = [];
+
+      gridEl.querySelectorAll('.inventory-slot').forEach(btn => {
+        const slot = btn.dataset.slot;
+        const { text, low } = slotSummary(slot);
+        btn.querySelector('.inventory-slot-summary').textContent = text;
+        btn.classList.toggle('low-stock', low);
+
+        binsFor(slot).forEach(bin => {
+          if (bin.part && isLowStock(bin)) {
+            reorderItems.push(`CAB-01-${slot}-${bin.id}: ${bin.part} (${bin.qty} left)`);
+          }
+        });
+
+        if (!query) {
+          btn.classList.remove('dimmed', 'highlight');
+          return;
+        }
+
+        const bins = binsFor(slot);
+        const matches =
+          slot.toLowerCase().includes(query) ||
+          bins.some(b => (b.part || '').toLowerCase().includes(query));
+        btn.classList.toggle('highlight', matches);
+        btn.classList.toggle('dimmed', !matches);
+      });
+
+      if (reorderItems.length > 0) {
+        reorderList.textContent = reorderItems.join(', ');
+        reorderBanner.hidden = false;
+      } else {
+        reorderBanner.hidden = true;
+      }
+    }
+
+    function nextBinLetter(slot) {
+      const used = new Set(binsFor(slot).map(b => b.id));
+      return BIN_LETTERS.find(l => !used.has(l));
+    }
+
+    function renderModal() {
+      if (!activeSlot) return;
+      modalSlotIdEl.textContent = `CAB-01-${activeSlot}`;
+      const bins = binsFor(activeSlot);
+      modalBinsEl.innerHTML = '';
+
+      bins.forEach(bin => {
+        const row = document.createElement('div');
+        row.className = 'modal-bin-row' + (isLowStock(bin) ? ' low-stock' : '');
+
+        row.innerHTML = `
+          <div class="modal-bin-header">
+            <span class="modal-bin-letter">${bin.id}</span>
+            <button type="button" class="modal-bin-remove" title="Remove sub-compartment">&times;</button>
+          </div>
+          <label>Part name
+            <input type="text" class="bin-part" value="${bin.part || ''}" placeholder="e.g. 10k resistor" />
+          </label>
+          <div class="modal-bin-fields">
+            <label>Qty on hand
+              <input type="number" class="bin-qty" min="0" value="${bin.qty || 0}" />
+            </label>
+            <label>Low-stock min
+              <input type="number" class="bin-min" min="0" value="${bin.min || 0}" />
+            </label>
+          </div>
+          <div class="modal-bin-fields">
+            <label>Distributor
+              <input type="text" class="bin-distributor" value="${bin.distributor || ''}" placeholder="DigiKey, Mouser&hellip;" />
+            </label>
+            <label>Order ID
+              <input type="text" class="bin-order" value="${bin.orderId || ''}" />
+            </label>
+          </div>
+          <label>Unit cost ($)
+            <input type="number" class="bin-cost" min="0" step="0.01" value="${bin.unitCost || 0}" />
+          </label>
+          <div class="modal-bin-actions">
+            <button type="button" class="secondary-btn bin-checkin">+ Check In</button>
+            <button type="button" class="secondary-btn bin-pick">&minus; Pick</button>
+          </div>
+        `;
+
+        row.querySelector('.bin-part').addEventListener('input', e => { bin.part = e.target.value; persist(); });
+        row.querySelector('.bin-qty').addEventListener('input', e => { bin.qty = Number(e.target.value) || 0; persist(); });
+        row.querySelector('.bin-min').addEventListener('input', e => { bin.min = Number(e.target.value) || 0; persist(); });
+        row.querySelector('.bin-distributor').addEventListener('input', e => { bin.distributor = e.target.value; persist(); });
+        row.querySelector('.bin-order').addEventListener('input', e => { bin.orderId = e.target.value; persist(); });
+        row.querySelector('.bin-cost').addEventListener('input', e => { bin.unitCost = Number(e.target.value) || 0; persist(); });
+
+        row.querySelector('.bin-checkin').addEventListener('click', () => {
+          const amount = Number(prompt('Quantity received:', '1'));
+          if (Number.isFinite(amount) && amount > 0) {
+            bin.qty = (bin.qty || 0) + amount;
+            persist();
+          }
+        });
+
+        row.querySelector('.bin-pick').addEventListener('click', () => {
+          const amount = Number(prompt('Quantity to pick:', '1'));
+          if (Number.isFinite(amount) && amount > 0) {
+            bin.qty = Math.max(0, (bin.qty || 0) - amount);
+            persist();
+          }
+        });
+
+        row.querySelector('.modal-bin-remove').addEventListener('click', () => {
+          if (!confirm(`Remove sub-compartment ${bin.id}?`)) return;
+          state[activeSlot].bins = binsFor(activeSlot).filter(b => b.id !== bin.id);
+          persist();
+        });
+
+        modalBinsEl.appendChild(row);
+      });
+
+      addBinEl.disabled = !nextBinLetter(activeSlot);
+    }
+
+    function persist() {
+      saveState(state);
+      renderModal();
+      renderGrid();
+    }
+
+    function openSlot(slot) {
+      activeSlot = slot;
+      if (!state[slot]) state[slot] = { bins: [] };
+      renderModal();
+      modalEl.hidden = false;
+    }
+
+    function closeModal() {
+      modalEl.hidden = true;
+      activeSlot = null;
+    }
+
+    gridEl.addEventListener('click', e => {
+      const btn = e.target.closest('.inventory-slot');
+      if (btn) openSlot(btn.dataset.slot);
+    });
+
+    modalCloseEl.addEventListener('click', closeModal);
+    modalEl.querySelector('.inventory-modal-backdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modalEl.hidden) closeModal();
+    });
+
+    addBinEl.addEventListener('click', () => {
+      const letter = nextBinLetter(activeSlot);
+      if (!letter) return;
+      state[activeSlot].bins.push({ id: letter, part: '', qty: 0, min: 0, distributor: '', orderId: '', unitCost: 0 });
+      persist();
+    });
+
+    searchEl.addEventListener('input', renderGrid);
+
+    renderGrid();
+  </script>
+</Layout>
