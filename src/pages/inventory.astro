@@ -251,12 +251,12 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
           </div>
         `;
 
-        row.querySelector('.bin-part').addEventListener('input', e => { bin.part = e.target.value; persist(); scheduleSync(activeSlot, bin); });
-        row.querySelector('.bin-qty').addEventListener('input', e => { bin.qty = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
-        row.querySelector('.bin-min').addEventListener('input', e => { bin.min = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
-        row.querySelector('.bin-distributor').addEventListener('input', e => { bin.distributor = e.target.value; persist(); scheduleSync(activeSlot, bin); });
-        row.querySelector('.bin-order').addEventListener('input', e => { bin.orderId = e.target.value; persist(); scheduleSync(activeSlot, bin); });
-        row.querySelector('.bin-cost').addEventListener('input', e => { bin.unitCost = Number(e.target.value) || 0; persist(); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-part').addEventListener('input', e => { bin.part = e.target.value; persistField(row, bin); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-qty').addEventListener('input', e => { bin.qty = Number(e.target.value) || 0; persistField(row, bin); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-min').addEventListener('input', e => { bin.min = Number(e.target.value) || 0; persistField(row, bin); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-distributor').addEventListener('input', e => { bin.distributor = e.target.value; persistField(row, bin); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-order').addEventListener('input', e => { bin.orderId = e.target.value; persistField(row, bin); scheduleSync(activeSlot, bin); });
+        row.querySelector('.bin-cost').addEventListener('input', e => { bin.unitCost = Number(e.target.value) || 0; persistField(row, bin); scheduleSync(activeSlot, bin); });
 
         row.querySelector('.bin-checkin').addEventListener('click', () => {
           const amount = Number(prompt('Quantity received:', '1'));
@@ -293,6 +293,15 @@ const SLOTS = ROWS.flatMap(row => COLS.map(col => `${row}${String(col).padStart(
     function persist() {
       saveState(state);
       renderModal();
+      renderGrid();
+    }
+
+    // Used while a field is actively being typed into: saves and updates
+    // everything except the modal DOM, so the focused input (and the
+    // on-screen keyboard on mobile) isn't torn down on every keystroke.
+    function persistField(row, bin) {
+      saveState(state);
+      row.classList.toggle('low-stock', isLowStock(bin));
       renderGrid();
     }
 
