@@ -1,26 +1,61 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PokemonNav from '../../components/PokemonNav.astro';
-import PokemonTable from '../../components/PokemonTable.astro';
 import Pokeball from '../../components/Pokeball.astro';
-import { TRAINERS, POKEMON } from '../../data/pokemon';
+import { FOUR_HUNDRED_CANDY } from '../../data/four-hundred-candy';
 ---
-<Layout title="Pokemon GO" description="Shared Pokemon GO collection and upgrade-plan tracker.">
+<Layout title="Pokemon GO" description="400-candy evolution reference and shared trainer trackers.">
   <section class="section pokemon-page">
-    <h1><Pokeball class="spin-on-hover" /> Pokemon GO Tracker</h1>
+    <h1><Pokeball class="spin-on-hover" /> Pokemon GO</h1>
     <p class="pokemon-subtitle">
-      Shared view of what each of us has caught and what we're planning to power up or evolve next.
+      The 400-candy club &mdash; the most expensive evolutions in the game. Hoard accordingly.
     </p>
 
     <PokemonNav />
 
-    <div class="pokemon-trainers">
-      {TRAINERS.map(t => (
-        <div class="card pokemon-trainer">
-          <h2><Pokeball /> <a href={`/pokemon-go/${t.slug}`}>{t.name}</a></h2>
-          <PokemonTable pokemon={POKEMON[t.slug] ?? []} />
+    <div class="candy-grid">
+      {FOUR_HUNDRED_CANDY.map(evo => (
+        <div class="card candy-card">
+          <span class="candy-badge">400 Candy</span>
+          <div class="candy-pair">
+            <a href={`https://pokemondb.net/pokedex/${evo.fromSpecies}`} target="_blank" rel="noopener noreferrer" class="candy-mon">
+              <span class="pokemon-icon-slot candy-icon-slot">
+                <img
+                  class="pokemon-icon candy-icon"
+                  src={`https://img.pokemondb.net/sprites/home/normal/${evo.fromSpecies}.png`}
+                  alt={evo.from}
+                  loading="lazy"
+                  width="64"
+                  height="64"
+                  onerror="this.closest('.candy-icon-slot').style.visibility='hidden'"
+                />
+              </span>
+              <span class="candy-name">{evo.from}</span>
+            </a>
+            <span class="candy-arrow">&rarr;</span>
+            <a href={`https://pokemondb.net/pokedex/${evo.toSpecies}`} target="_blank" rel="noopener noreferrer" class="candy-mon">
+              <span class="pokemon-icon-slot candy-icon-slot">
+                <img
+                  class="pokemon-icon candy-icon"
+                  src={`https://img.pokemondb.net/sprites/home/normal/${evo.toSpecies}.png`}
+                  alt={evo.to}
+                  loading="lazy"
+                  width="64"
+                  height="64"
+                  onerror="this.closest('.candy-icon-slot').style.visibility='hidden'"
+                />
+              </span>
+              <span class="candy-name">{evo.to}</span>
+            </a>
+          </div>
+          {evo.note && <p class="candy-note">{evo.note}</p>}
         </div>
       ))}
     </div>
+
+    <p class="candy-source">
+      Sourced from community wikis (Bulbapedia &amp; the Pokemon GO Fandom wiki) &mdash; in-game
+      candy costs do change with balance updates, so double check anything that looks off.
+    </p>
   </section>
 </Layout>

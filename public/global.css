@@ -1288,3 +1288,95 @@ body:has(.pokemon-page) .site-header {
 body:has(.pokemon-page) .site-footer {
   display: none;
 }
+
+.candy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.candy-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  padding-top: 2.25rem;
+}
+
+.candy-badge {
+  position: absolute;
+  top: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--poke-red);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.candy-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.candy-mon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.candy-icon-slot {
+  width: 76px;
+  height: 76px;
+}
+
+.candy-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.candy-mon:hover .candy-icon-slot {
+  transform: scale(1.12);
+  border-color: var(--poke-red);
+}
+
+.candy-mon:hover .candy-name {
+  color: var(--poke-red);
+}
+
+.candy-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  max-width: 7.5rem;
+}
+
+.candy-arrow {
+  font-size: 1.4rem;
+  opacity: 0.4;
+  flex: 0 0 auto;
+}
+
+.candy-note {
+  margin: 0;
+  font-size: 0.78rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.candy-source {
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  opacity: 0.55;
+}
