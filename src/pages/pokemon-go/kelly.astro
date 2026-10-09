@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PokemonNav from '../../components/PokemonNav.astro';
+import PokemonTable from '../../components/PokemonTable.astro';
+import { POKEMON } from '../../data/pokemon';
+---
+<Layout title="Kelly - Pokemon GO" description="Kelly's Pokemon GO collection and upgrade plans.">
+  <section class="section pokemon-page">
+    <h1>Kelly</h1>
+
+    <PokemonNav current="kelly" />
+
+    <div class="pokemon-trainers">
+      <div class="card pokemon-trainer">
+        <PokemonTable pokemon={POKEMON.kelly ?? []} />
+      </div>
+    </div>
+  </section>
+</Layout>

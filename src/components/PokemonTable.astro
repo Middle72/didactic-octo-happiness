@@ -1,0 +1,51 @@
+---
+import type { Pokemon } from '../data/pokemon';
+
+interface Props {
+  pokemon: Pokemon[];
+}
+
+const { pokemon } = Astro.props;
+---
+{pokemon.length === 0 ? (
+  <p class="pokemon-empty">No Pokemon added yet.</p>
+) : (
+  <div class="pokemon-table-wrap">
+    <table class="pokemon-table">
+      <thead>
+        <tr>
+          <th>Species / Nickname</th>
+          <th>Type(s)</th>
+          <th>CP</th>
+          <th>Level Range</th>
+          <th>Atk</th>
+          <th>Def</th>
+          <th>HP</th>
+          <th>IV Total / %</th>
+          <th>Fast Attack</th>
+          <th>Charged Attack 1</th>
+          <th>Charged Attack 2</th>
+          <th>Battle Notes &amp; Mega Readiness</th>
+        </tr>
+      </thead>
+      <tbody>
+        {pokemon.map(p => (
+          <tr>
+            <td>{p.name}</td>
+            <td>{p.types}</td>
+            <td>{p.cp}</td>
+            <td>{p.levelRange}</td>
+            <td>{p.atk}</td>
+            <td>{p.def}</td>
+            <td>{p.hp}</td>
+            <td>{p.iv}</td>
+            <td>{p.fastAttack}</td>
+            <td>{p.chargedAttack1}</td>
+            <td>{p.chargedAttack2}</td>
+            <td>{p.notes}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}

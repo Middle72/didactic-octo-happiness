@@ -1,7 +1,4 @@
----
-import Layout from '../layouts/Layout.astro';
-
-interface Pokemon {
+export interface Pokemon {
   name: string;
   types: string;
   cp: number;
@@ -16,12 +13,21 @@ interface Pokemon {
   notes: string;
 }
 
-const TRAINERS = ['Bobby', 'Kelly', 'Kim'];
+export interface Trainer {
+  slug: string;
+  name: string;
+}
 
-const POKEMON: Record<string, Pokemon[]> = {
-  Bobby: [],
-  Kelly: [],
-  Kim: [
+export const TRAINERS: Trainer[] = [
+  { slug: 'bobby', name: 'Bobby' },
+  { slug: 'kelly', name: 'Kelly' },
+  { slug: 'kim', name: 'Kim' },
+];
+
+export const POKEMON: Record<string, Pokemon[]> = {
+  bobby: [],
+  kelly: [],
+  kim: [
     {
       name: 'MegDragonite',
       types: 'Dragon / Flying',
@@ -136,75 +142,3 @@ const POKEMON: Record<string, Pokemon[]> = {
     },
   ],
 };
----
-<Layout title="Pokemon GO" description="Shared Pokemon GO collection and upgrade-plan tracker.">
-  <section class="section pokemon-page">
-    <h1>Pokemon GO Tracker</h1>
-    <p class="pokemon-subtitle">
-      Shared view of what each of us has caught and what we're planning to power up or evolve next.
-    </p>
-
-    <div class="pokemon-trainers">
-      {TRAINERS.map(name => {
-        const pokemon = POKEMON[name] ?? [];
-        return (
-          <div class="card pokemon-trainer">
-            <h2>{name}</h2>
-            {pokemon.length === 0 ? (
-              <p class="pokemon-empty">No Pokemon added yet.</p>
-            ) : (
-              <div class="pokemon-table-wrap">
-                <table class="pokemon-table">
-                  <thead>
-                    <tr>
-                      <th>Species / Nickname</th>
-                      <th>Type(s)</th>
-                      <th>CP</th>
-                      <th>Level Range</th>
-                      <th>Atk</th>
-                      <th>Def</th>
-                      <th>HP</th>
-                      <th>IV Total / %</th>
-                      <th>Fast Attack</th>
-                      <th>Charged Attack 1</th>
-                      <th>Charged Attack 2</th>
-                      <th>Battle Notes &amp; Mega Readiness</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pokemon.map(p => (
-                      <tr>
-                        <td>{p.name}</td>
-                        <td>{p.types}</td>
-                        <td>{p.cp}</td>
-                        <td>{p.levelRange}</td>
-                        <td>{p.atk}</td>
-                        <td>{p.def}</td>
-                        <td>{p.hp}</td>
-                        <td>{p.iv}</td>
-                        <td>{p.fastAttack}</td>
-                        <td>{p.chargedAttack1}</td>
-                        <td>{p.chargedAttack2}</td>
-                        <td>{p.notes}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </section>
-
-  <style is:global>
-    body:has(.pokemon-page) .site-header {
-      display: none;
-    }
-
-    body:has(.pokemon-page) .site-footer {
-      display: none;
-    }
-  </style>
-</Layout>
