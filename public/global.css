@@ -930,7 +930,7 @@ main {
 }
 
 .pokemon-page {
-  max-width: 1100px;
+  max-width: 1400px;
 }
 
 .pokemon-subtitle {
@@ -939,9 +939,9 @@ main {
 }
 
 .pokemon-trainers {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .pokemon-trainer h2 {
@@ -951,4 +951,45 @@ main {
 .pokemon-empty {
   opacity: 0.6;
   margin: 0;
+}
+
+.pokemon-table-wrap {
+  overflow-x: auto;
+}
+
+.pokemon-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.pokemon-table th,
+.pokemon-table td {
+  text-align: left;
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.pokemon-table th {
+  opacity: 0.6;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pokemon-table td:first-child {
+  font-weight: 700;
+}
+
+.pokemon-table td:last-child {
+  white-space: normal;
+  min-width: 18rem;
+  opacity: 0.85;
+}
+
+.pokemon-table tbody tr:hover {
+  background: var(--bg);
 }
