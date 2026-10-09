@@ -1,0 +1,14 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+<svg class={`pokeball-icon ${className}`} viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24" cy="24" r="22" fill="#fff" stroke="#1a1a1a" stroke-width="2.5" />
+  <path d="M2 24a22 22 0 0 1 44 0z" fill="#EE1515" stroke="#1a1a1a" stroke-width="2.5" />
+  <rect x="2" y="22" width="44" height="4" fill="#1a1a1a" />
+  <circle cx="24" cy="24" r="7" fill="#fff" stroke="#1a1a1a" stroke-width="2.5" />
+  <circle cx="24" cy="24" r="3" fill="#fff" stroke="#1a1a1a" stroke-width="2" />
+</svg>

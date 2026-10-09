@@ -1,5 +1,6 @@
 ---
 import type { Pokemon } from '../data/pokemon';
+import { typeColor } from '../data/type-colors';
 
 interface Props {
   pokemon: Pokemon[];
@@ -34,19 +35,27 @@ const { pokemon } = Astro.props;
           <tr>
             <td class="pokemon-icon-cell">
               <a href={`https://pokemondb.net/pokedex/${p.species}`} target="_blank" rel="noopener noreferrer">
-                <img
-                  class="pokemon-icon"
-                  src={`https://img.pokemondb.net/sprites/home/normal/${p.species}.png`}
-                  alt={p.species}
-                  loading="lazy"
-                  width="48"
-                  height="48"
-                  onerror="this.style.visibility='hidden'"
-                />
+                <span class="pokemon-icon-slot">
+                  <img
+                    class="pokemon-icon"
+                    src={`https://img.pokemondb.net/sprites/home/normal/${p.species}.png`}
+                    alt={p.species}
+                    loading="lazy"
+                    width="40"
+                    height="40"
+                    onerror="this.closest('.pokemon-icon-slot').style.visibility='hidden'"
+                  />
+                </span>
               </a>
             </td>
-            <td>{p.name}</td>
-            <td>{p.types}</td>
+            <td class="pokemon-name-cell">{p.name}</td>
+            <td>
+              <div class="type-badges">
+                {p.types.split('/').map(t => (
+                  <span class="type-badge" style={`background:${typeColor(t)}`}>{t.trim()}</span>
+                ))}
+              </div>
+            </td>
             <td>{p.cp}</td>
             <td>{p.levelRange}</td>
             <td>{p.atk}</td>

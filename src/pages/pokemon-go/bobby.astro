@@ -2,11 +2,12 @@
 import Layout from '../../layouts/Layout.astro';
 import PokemonNav from '../../components/PokemonNav.astro';
 import PokemonTable from '../../components/PokemonTable.astro';
+import Pokeball from '../../components/Pokeball.astro';
 import { POKEMON } from '../../data/pokemon';
 ---
 <Layout title="Bobby - Pokemon GO" description="Bobby's Pokemon GO collection and upgrade plans.">
   <section class="section pokemon-page">
-    <h1>Bobby</h1>
+    <h1><Pokeball class="spin-on-hover" /> Bobby</h1>
 
     <PokemonNav current="bobby" />
 
