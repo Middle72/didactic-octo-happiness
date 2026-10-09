@@ -7,68 +7,164 @@ interface Props {
 }
 
 const { pokemon } = Astro.props;
+
+const allTypes = Array.from(
+  new Set(pokemon.flatMap(p => p.types.split('/').map(t => t.trim())))
+).sort();
+
+const COLUMNS = [
+  { key: 'name', label: 'Species / Nickname', sortType: 'text' },
+  { key: 'types', label: 'Type(s)', sortType: 'text' },
+  { key: 'cp', label: 'CP', sortType: 'number' },
+  { key: 'levelRange', label: 'Level Range', sortType: 'text' },
+  { key: 'atk', label: 'Atk', sortType: 'number' },
+  { key: 'def', label: 'Def', sortType: 'number' },
+  { key: 'hp', label: 'HP', sortType: 'number' },
+  { key: 'iv', label: 'IV Total / %', sortType: 'text' },
+  { key: 'fastAttack', label: 'Fast Attack', sortType: 'text' },
+  { key: 'chargedAttack1', label: 'Charged Attack 1', sortType: 'text' },
+  { key: 'chargedAttack2', label: 'Charged Attack 2', sortType: 'text' },
+  { key: 'notes', label: 'Battle Notes & Mega Readiness', sortType: 'text' },
+];
 ---
 {pokemon.length === 0 ? (
   <p class="pokemon-empty">No Pokemon added yet.</p>
 ) : (
-  <div class="pokemon-table-wrap">
-    <table class="pokemon-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Species / Nickname</th>
-          <th>Type(s)</th>
-          <th>CP</th>
-          <th>Level Range</th>
-          <th>Atk</th>
-          <th>Def</th>
-          <th>HP</th>
-          <th>IV Total / %</th>
-          <th>Fast Attack</th>
-          <th>Charged Attack 1</th>
-          <th>Charged Attack 2</th>
-          <th>Battle Notes &amp; Mega Readiness</th>
-        </tr>
-      </thead>
-      <tbody>
-        {pokemon.map(p => (
+  <div class="pokemon-table-container">
+    <div class="pokemon-filters">
+      <input type="search" class="pokemon-search" placeholder="Search by name or species&hellip;" />
+      <select class="pokemon-type-filter">
+        <option value="">All Types</option>
+        {allTypes.map(t => <option value={t}>{t}</option>)}
+      </select>
+      <span class="pokemon-count"></span>
+    </div>
+
+    <div class="pokemon-table-wrap">
+      <table class="pokemon-table">
+        <thead>
           <tr>
-            <td class="pokemon-icon-cell">
-              <a href={`https://pokemondb.net/pokedex/${p.species}`} target="_blank" rel="noopener noreferrer">
-                <span class="pokemon-icon-slot">
-                  <img
-                    class="pokemon-icon"
-                    src={`https://img.pokemondb.net/sprites/home/normal/${p.species}.png`}
-                    alt={p.species}
-                    loading="lazy"
-                    width="40"
-                    height="40"
-                    onerror="this.closest('.pokemon-icon-slot').style.visibility='hidden'"
-                  />
-                </span>
-              </a>
-            </td>
-            <td class="pokemon-name-cell">{p.name}</td>
-            <td>
-              <div class="type-badges">
-                {p.types.split('/').map(t => (
-                  <span class="type-badge" style={`background:${typeColor(t)}`}>{t.trim()}</span>
-                ))}
-              </div>
-            </td>
-            <td>{p.cp}</td>
-            <td>{p.levelRange}</td>
-            <td>{p.atk}</td>
-            <td>{p.def}</td>
-            <td>{p.hp}</td>
-            <td>{p.iv}</td>
-            <td>{p.fastAttack}</td>
-            <td>{p.chargedAttack1}</td>
-            <td>{p.chargedAttack2}</td>
-            <td>{p.notes}</td>
+            <th></th>
+            {COLUMNS.map(col => (
+              <th class="pokemon-sortable" data-key={col.key} data-sort-type={col.sortType}>
+                {col.label}
+                <span class="sort-arrow"></span>
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {pokemon.map(p => (
+            <tr
+              data-name={p.name.toLowerCase()}
+              data-species={p.species.toLowerCase()}
+              data-types={p.types.toLowerCase()}
+              data-cp={p.cp}
+              data-level-range={p.levelRange}
+              data-atk={p.atk}
+              data-def={p.def}
+              data-hp={p.hp}
+              data-iv={p.iv}
+              data-fast-attack={p.fastAttack}
+              data-charged-attack1={p.chargedAttack1}
+              data-charged-attack2={p.chargedAttack2}
+              data-notes={p.notes}
+            >
+              <td class="pokemon-icon-cell">
+                <a href={`https://pokemondb.net/pokedex/${p.species}`} target="_blank" rel="noopener noreferrer">
+                  <span class="pokemon-icon-slot">
+                    <img
+                      class="pokemon-icon"
+                      src={`https://img.pokemondb.net/sprites/home/normal/${p.species}.png`}
+                      alt={p.species}
+                      loading="lazy"
+                      width="40"
+                      height="40"
+                      onerror="this.closest('.pokemon-icon-slot').style.visibility='hidden'"
+                    />
+                  </span>
+                </a>
+              </td>
+              <td class="pokemon-name-cell">{p.name}</td>
+              <td>
+                <div class="type-badges">
+                  {p.types.split('/').map(t => (
+                    <span class="type-badge" style={`background:${typeColor(t)}`}>{t.trim()}</span>
+                  ))}
+                </div>
+              </td>
+              <td>{p.cp}</td>
+              <td>{p.levelRange}</td>
+              <td>{p.atk}</td>
+              <td>{p.def}</td>
+              <td>{p.hp}</td>
+              <td>{p.iv}</td>
+              <td>{p.fastAttack}</td>
+              <td>{p.chargedAttack1}</td>
+              <td>{p.chargedAttack2}</td>
+              <td>{p.notes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </div>
 )}
+
+<script>
+  document.querySelectorAll('.pokemon-table-container').forEach(container => {
+    const searchEl = container.querySelector<HTMLInputElement>('.pokemon-search');
+    const typeEl = container.querySelector<HTMLSelectElement>('.pokemon-type-filter');
+    const countEl = container.querySelector<HTMLElement>('.pokemon-count');
+    const tbody = container.querySelector('tbody');
+    if (!searchEl || !typeEl || !countEl || !tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr'));
+
+    function applyFilter() {
+      const query = (searchEl as HTMLInputElement).value.trim().toLowerCase();
+      const type = (typeEl as HTMLSelectElement).value.toLowerCase();
+      let visible = 0;
+      rows.forEach(row => {
+        const matchesQuery =
+          !query ||
+          (row.dataset.name ?? '').includes(query) ||
+          (row.dataset.species ?? '').includes(query);
+        const matchesType = !type || (row.dataset.types ?? '').includes(type);
+        const show = matchesQuery && matchesType;
+        row.hidden = !show;
+        if (show) visible++;
+      });
+      countEl!.textContent = `${visible} of ${rows.length}`;
+    }
+
+    searchEl.addEventListener('input', applyFilter);
+    typeEl.addEventListener('change', applyFilter);
+    applyFilter();
+
+    let sortKey = '';
+    let sortAsc = true;
+
+    container.querySelectorAll<HTMLElement>('.pokemon-sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const key = th.dataset.key!;
+        const sortType = th.dataset.sortType;
+
+        sortAsc = sortKey === key ? !sortAsc : true;
+        sortKey = key;
+
+        container.querySelectorAll('.pokemon-sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+        th.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+
+        rows.sort((a, b) => {
+          const av = a.dataset[key] ?? '';
+          const bv = b.dataset[key] ?? '';
+          const cmp = sortType === 'number' ? Number(av) - Number(bv) : av.localeCompare(bv);
+          return sortAsc ? cmp : -cmp;
+        });
+
+        rows.forEach(row => tbody!.appendChild(row));
+      });
+    });
+  });
+</script>

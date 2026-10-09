@@ -1079,6 +1079,66 @@ main {
   letter-spacing: 0.03em;
 }
 
+.pokemon-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-sortable:hover {
+  opacity: 1;
+  color: var(--poke-red);
+}
+
+.sort-arrow::after {
+  content: '';
+  display: inline-block;
+  margin-left: 0.3rem;
+}
+
+.pokemon-sortable.sort-asc .sort-arrow::after {
+  content: '▲';
+}
+
+.pokemon-sortable.sort-desc .sort-arrow::after {
+  content: '▼';
+}
+
+.pokemon-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.pokemon-search,
+.pokemon-type-filter {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.pokemon-search {
+  flex: 1;
+  min-width: 180px;
+}
+
+.pokemon-search:focus,
+.pokemon-type-filter:focus {
+  outline: none;
+  border-color: var(--poke-red);
+}
+
+.pokemon-count {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
 .pokemon-table td.pokemon-name-cell {
   font-weight: 700;
 }
