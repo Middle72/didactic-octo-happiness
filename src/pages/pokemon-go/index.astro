@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import PokemonNav from '../../components/PokemonNav.astro';
 import Pokeball from '../../components/Pokeball.astro';
 import { FOUR_HUNDRED_CANDY } from '../../data/four-hundred-candy';
+import { TRAINERS } from '../../data/pokemon';
 ---
 <Layout title="Pokemon GO" description="400-candy evolution reference and shared trainer trackers.">
   <section class="section pokemon-page">
@@ -49,6 +50,13 @@ import { FOUR_HUNDRED_CANDY } from '../../data/four-hundred-candy';
             </a>
           </div>
           {evo.note && <p class="candy-note">{evo.note}</p>}
+          <div class="candy-owners">
+            {TRAINERS.map(trainer => (
+              <span class={`candy-owner-chip ${evo.owners.includes(trainer.slug) ? 'owned' : 'not-owned'}`}>
+                {evo.owners.includes(trainer.slug) ? '✓' : '✕'} {trainer.name}
+              </span>
+            ))}
+          </div>
         </div>
       ))}
     </div>
