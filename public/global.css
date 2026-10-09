@@ -928,3 +928,27 @@ main {
   padding: 0.5rem;
   font-size: 0.9rem;
 }
+
+.pokemon-page {
+  max-width: 1100px;
+}
+
+.pokemon-subtitle {
+  opacity: 0.7;
+  margin: 0 0 1.5rem;
+}
+
+.pokemon-trainers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.pokemon-trainer h2 {
+  margin: 0 0 0.75rem;
+}
+
+.pokemon-empty {
+  opacity: 0.6;
+  margin: 0;
+}
