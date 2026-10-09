@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const TRAINERS = ['Me', 'Kelly', 'Kim'];
+---
+<Layout title="Pokemon GO" description="Shared Pokemon GO collection and upgrade-plan tracker.">
+  <section class="section pokemon-page">
+    <h1>Pokemon GO Tracker</h1>
+    <p class="pokemon-subtitle">
+      Shared view of what each of us has caught and what we're planning to power up or evolve next.
+    </p>
+
+    <div class="pokemon-trainers">
+      {TRAINERS.map(name => (
+        <div class="card pokemon-trainer">
+          <h2>{name}</h2>
+          <p class="pokemon-empty">No Pokemon added yet.</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
