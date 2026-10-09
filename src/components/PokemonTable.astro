@@ -1,6 +1,7 @@
 ---
 import type { Pokemon } from '../data/pokemon';
 import { typeColor } from '../data/type-colors';
+import { ALL_TYPES } from '../data/type-effectiveness';
 
 interface Props {
   pokemon: Pokemon[];
@@ -37,6 +38,10 @@ const COLUMNS = [
         <option value="">All Types</option>
         {allTypes.map(t => <option value={t}>{t}</option>)}
       </select>
+      <select class="pokemon-raid-filter">
+        <option value="">Suggest counters for raid boss type&hellip;</option>
+        {ALL_TYPES.map(t => <option value={t}>vs {t}</option>)}
+      </select>
       <span class="pokemon-count"></span>
     </div>
 
@@ -51,11 +56,16 @@ const COLUMNS = [
                 <span class="sort-arrow"></span>
               </th>
             ))}
+            <th class="pokemon-sortable" data-key="raidEff" data-sort-type="number">
+              vs Raid Boss
+              <span class="sort-arrow"></span>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {pokemon.map(p => (
+          {pokemon.map((p, i) => (
             <tr
+              data-row-index={i}
               data-name={p.name.toLowerCase()}
               data-species={p.species.toLowerCase()}
               data-types={p.types.toLowerCase()}
@@ -69,6 +79,7 @@ const COLUMNS = [
               data-charged-attack1={p.chargedAttack1}
               data-charged-attack2={p.chargedAttack2}
               data-notes={p.notes}
+              data-raid-eff=""
             >
               <td class="pokemon-icon-cell">
                 <a href={`https://pokemondb.net/pokedex/${p.species}`} target="_blank" rel="noopener noreferrer">
@@ -102,7 +113,8 @@ const COLUMNS = [
               <td>{p.fastAttack}</td>
               <td>{p.chargedAttack1}</td>
               <td>{p.chargedAttack2}</td>
-              <td>{p.notes}</td>
+              <td class="pokemon-notes-cell">{p.notes}</td>
+              <td class="raid-eff-cell">&mdash;</td>
             </tr>
           ))}
         </tbody>
@@ -112,12 +124,15 @@ const COLUMNS = [
 )}
 
 <script>
+  import { effectiveness, moveType } from '../data/type-effectiveness';
+
   document.querySelectorAll('.pokemon-table-container').forEach(container => {
     const searchEl = container.querySelector<HTMLInputElement>('.pokemon-search');
     const typeEl = container.querySelector<HTMLSelectElement>('.pokemon-type-filter');
+    const raidEl = container.querySelector<HTMLSelectElement>('.pokemon-raid-filter');
     const countEl = container.querySelector<HTMLElement>('.pokemon-count');
     const tbody = container.querySelector('tbody');
-    if (!searchEl || !typeEl || !countEl || !tbody) return;
+    if (!searchEl || !typeEl || !raidEl || !countEl || !tbody) return;
 
     const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr'));
 
@@ -142,29 +157,82 @@ const COLUMNS = [
     typeEl.addEventListener('change', applyFilter);
     applyFilter();
 
+    function sortRowsBy(key: string, sortType: string | undefined, asc: boolean) {
+      rows.sort((a, b) => {
+        const av = a.dataset[key] ?? '';
+        const bv = b.dataset[key] ?? '';
+        const cmp = sortType === 'number' ? Number(av) - Number(bv) : av.localeCompare(bv);
+        return asc ? cmp : -cmp;
+      });
+      rows.forEach(row => tbody!.appendChild(row));
+    }
+
+    function setActiveSortHeader(key: string, asc: boolean) {
+      container.querySelectorAll('.pokemon-sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+      const th = container.querySelector<HTMLElement>(`.pokemon-sortable[data-key="${key}"]`);
+      th?.classList.add(asc ? 'sort-asc' : 'sort-desc');
+    }
+
     let sortKey = '';
     let sortAsc = true;
 
     container.querySelectorAll<HTMLElement>('.pokemon-sortable').forEach(th => {
       th.addEventListener('click', () => {
         const key = th.dataset.key!;
-        const sortType = th.dataset.sortType;
-
         sortAsc = sortKey === key ? !sortAsc : true;
         sortKey = key;
-
-        container.querySelectorAll('.pokemon-sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
-        th.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
-
-        rows.sort((a, b) => {
-          const av = a.dataset[key] ?? '';
-          const bv = b.dataset[key] ?? '';
-          const cmp = sortType === 'number' ? Number(av) - Number(bv) : av.localeCompare(bv);
-          return sortAsc ? cmp : -cmp;
-        });
-
-        rows.forEach(row => tbody!.appendChild(row));
+        setActiveSortHeader(key, sortAsc);
+        sortRowsBy(key, th.dataset.sortType, sortAsc);
       });
+    });
+
+    const EFFECT_LABEL: Record<number, string> = {
+      2: 'Super Effective',
+      1: 'Neutral',
+      0.5: 'Resisted',
+      0: 'No Effect',
+    };
+
+    raidEl.addEventListener('change', () => {
+      const bossType = raidEl.value;
+
+      if (!bossType) {
+        rows.forEach(row => {
+          row.dataset.raidEff = '';
+          const cell = row.querySelector<HTMLElement>('.raid-eff-cell');
+          if (cell) {
+            cell.textContent = '—';
+            cell.className = 'raid-eff-cell';
+          }
+        });
+        sortKey = 'rowIndex';
+        sortAsc = true;
+        setActiveSortHeader('name', true);
+        container.querySelectorAll('.pokemon-sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+        sortRowsBy('rowIndex', 'number', true);
+        return;
+      }
+
+      rows.forEach(row => {
+        const moves = [row.dataset.fastAttack, row.dataset.chargedAttack1, row.dataset.chargedAttack2];
+        const best = moves
+          .map(m => moveType(m ?? ''))
+          .filter((t): t is string => Boolean(t))
+          .reduce((max, t) => Math.max(max, effectiveness(t, bossType)), 0);
+
+        row.dataset.raidEff = String(best);
+        const cell = row.querySelector<HTMLElement>('.raid-eff-cell');
+        if (cell) {
+          const label = EFFECT_LABEL[best] ?? 'Neutral';
+          cell.textContent = `${best}× ${label}`;
+          cell.className = `raid-eff-cell raid-eff-${String(best).replace('.', '_')}`;
+        }
+      });
+
+      sortKey = 'raidEff';
+      sortAsc = false;
+      setActiveSortHeader('raidEff', false);
+      sortRowsBy('raidEff', 'number', false);
     });
   });
 </script>
