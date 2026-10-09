@@ -19,4 +19,14 @@ const TRAINERS = ['Me', 'Kelly', 'Kim'];
       ))}
     </div>
   </section>
+
+  <style is:global>
+    body:has(.pokemon-page) .site-header {
+      display: none;
+    }
+
+    body:has(.pokemon-page) .site-footer {
+      display: none;
+    }
+  </style>
 </Layout>
