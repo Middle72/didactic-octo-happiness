@@ -14,6 +14,7 @@ const { pokemon } = Astro.props;
     <table class="pokemon-table">
       <thead>
         <tr>
+          <th></th>
           <th>Species / Nickname</th>
           <th>Type(s)</th>
           <th>CP</th>
@@ -31,6 +32,19 @@ const { pokemon } = Astro.props;
       <tbody>
         {pokemon.map(p => (
           <tr>
+            <td class="pokemon-icon-cell">
+              <a href={`https://pokemondb.net/pokedex/${p.species}`} target="_blank" rel="noopener noreferrer">
+                <img
+                  class="pokemon-icon"
+                  src={`https://img.pokemondb.net/sprites/home/normal/${p.species}.png`}
+                  alt={p.species}
+                  loading="lazy"
+                  width="48"
+                  height="48"
+                  onerror="this.style.visibility='hidden'"
+                />
+              </a>
+            </td>
             <td>{p.name}</td>
             <td>{p.types}</td>
             <td>{p.cp}</td>
