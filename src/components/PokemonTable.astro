@@ -110,9 +110,9 @@ const COLUMNS = [
               <td>{p.def}</td>
               <td>{p.hp}</td>
               <td>{p.iv}</td>
-              <td>{p.fastAttack}</td>
-              <td>{p.chargedAttack1}</td>
-              <td>{p.chargedAttack2}</td>
+              <td class="pokemon-move-cell">{p.fastAttack} <span class="move-eff"></span></td>
+              <td class="pokemon-move-cell">{p.chargedAttack1} <span class="move-eff"></span></td>
+              <td class="pokemon-move-cell">{p.chargedAttack2} <span class="move-eff"></span></td>
               <td class="pokemon-notes-cell">{p.notes}</td>
               <td class="raid-eff-cell">&mdash;</td>
             </tr>
@@ -193,6 +193,25 @@ const COLUMNS = [
       0: 'No Effect',
     };
 
+    function clearMoveBadge(span: HTMLElement) {
+      span.textContent = '';
+      span.className = 'move-eff';
+      span.removeAttribute('title');
+    }
+
+    function setMoveBadge(span: HTMLElement, move: string | undefined, bossType: string) {
+      const type = moveType(move ?? '');
+      if (!type) {
+        clearMoveBadge(span);
+        return;
+      }
+      const mult = effectiveness(type, bossType);
+      const label = EFFECT_LABEL[mult] ?? 'Neutral';
+      span.textContent = `${mult}×`;
+      span.className = `move-eff move-eff-${String(mult).replace('.', '_')}`;
+      span.title = label;
+    }
+
     raidEl.addEventListener('change', () => {
       const bossType = raidEl.value;
 
@@ -204,6 +223,7 @@ const COLUMNS = [
             cell.textContent = '—';
             cell.className = 'raid-eff-cell';
           }
+          row.querySelectorAll<HTMLElement>('.move-eff').forEach(clearMoveBadge);
         });
         sortKey = 'rowIndex';
         sortAsc = true;
@@ -221,6 +241,13 @@ const COLUMNS = [
           .reduce((max, t) => Math.max(max, effectiveness(t, bossType)), 0);
 
         row.dataset.raidEff = String(best);
+
+        const moveCells = row.querySelectorAll<HTMLElement>('.pokemon-move-cell');
+        moveCells.forEach((cell, i) => {
+          const badge = cell.querySelector<HTMLElement>('.move-eff');
+          if (badge) setMoveBadge(badge, moves[i], bossType);
+        });
+
         const cell = row.querySelector<HTMLElement>('.raid-eff-cell');
         if (cell) {
           const label = EFFECT_LABEL[best] ?? 'Neutral';
