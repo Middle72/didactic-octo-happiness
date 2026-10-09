@@ -1,0 +1,15 @@
+---
+import { TRAINERS } from '../data/pokemon';
+
+interface Props {
+  current?: string;
+}
+
+const { current } = Astro.props;
+---
+<nav class="pokemon-nav">
+  <a href="/pokemon-go" class={!current ? 'active' : ''}>All Trainers</a>
+  {TRAINERS.map(t => (
+    <a href={`/pokemon-go/${t.slug}`} class={current === t.slug ? 'active' : ''}>{t.name}</a>
+  ))}
+</nav>
