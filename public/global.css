@@ -1172,6 +1172,12 @@ main {
   text-decoration: line-through;
 }
 
+.raid-eff-unknown {
+  font-style: italic;
+  opacity: 0.45;
+  font-weight: 400;
+}
+
 tr[data-raid-eff="2"] {
   background: rgba(22, 163, 74, 0.07);
 }

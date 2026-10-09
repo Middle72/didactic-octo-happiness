@@ -71,9 +71,9 @@ const COLUMNS = [
               data-types={p.types.toLowerCase()}
               data-cp={p.cp}
               data-level-range={p.levelRange}
-              data-atk={p.atk}
-              data-def={p.def}
-              data-hp={p.hp}
+              data-atk={p.atk ?? ''}
+              data-def={p.def ?? ''}
+              data-hp={p.hp ?? ''}
               data-iv={p.iv}
               data-fast-attack={p.fastAttack}
               data-charged-attack1={p.chargedAttack1}
@@ -106,9 +106,9 @@ const COLUMNS = [
               </td>
               <td>{p.cp}</td>
               <td>{p.levelRange}</td>
-              <td>{p.atk}</td>
-              <td>{p.def}</td>
-              <td>{p.hp}</td>
+              <td>{p.atk ?? '—'}</td>
+              <td>{p.def ?? '—'}</td>
+              <td>{p.hp ?? '—'}</td>
               <td>{p.iv}</td>
               <td class="pokemon-move-cell">{p.fastAttack} <span class="move-eff"></span></td>
               <td class="pokemon-move-cell">{p.chargedAttack1} <span class="move-eff"></span></td>
@@ -235,12 +235,7 @@ const COLUMNS = [
 
       rows.forEach(row => {
         const moves = [row.dataset.fastAttack, row.dataset.chargedAttack1, row.dataset.chargedAttack2];
-        const best = moves
-          .map(m => moveType(m ?? ''))
-          .filter((t): t is string => Boolean(t))
-          .reduce((max, t) => Math.max(max, effectiveness(t, bossType)), 0);
-
-        row.dataset.raidEff = String(best);
+        const knownTypes = moves.map(m => moveType(m ?? '')).filter((t): t is string => Boolean(t));
 
         const moveCells = row.querySelectorAll<HTMLElement>('.pokemon-move-cell');
         moveCells.forEach((cell, i) => {
@@ -249,6 +244,20 @@ const COLUMNS = [
         });
 
         const cell = row.querySelector<HTMLElement>('.raid-eff-cell');
+
+        if (knownTypes.length === 0) {
+          // No move has a recorded type (e.g. "Smack Down / Mud-Slap" with
+          // no type listed) - unknown, not "no effect".
+          row.dataset.raidEff = '-1';
+          if (cell) {
+            cell.textContent = 'No move type data';
+            cell.className = 'raid-eff-cell raid-eff-unknown';
+          }
+          return;
+        }
+
+        const best = knownTypes.reduce((max, t) => Math.max(max, effectiveness(t, bossType)), 0);
+        row.dataset.raidEff = String(best);
         if (cell) {
           const label = EFFECT_LABEL[best] ?? 'Neutral';
           cell.textContent = `${best}× ${label}`;
