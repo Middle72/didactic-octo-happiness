@@ -1032,6 +1032,18 @@ main {
   background: var(--bg);
 }
 
+.pokemon-icon-cell {
+  width: 1%;
+  padding-right: 0.25rem !important;
+}
+
+.pokemon-icon {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 body:has(.pokemon-page) .site-header {
   display: none;
 }

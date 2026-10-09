@@ -1,5 +1,6 @@
 export interface Pokemon {
   name: string;
+  species: string;
   types: string;
   cp: number;
   levelRange: string;
@@ -30,6 +31,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
   kim: [
     {
       name: 'MegDragonite',
+      species: 'dragonite',
       types: 'Dragon / Flying',
       cp: 2091,
       levelRange: '~21–22',
@@ -44,6 +46,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Latias',
+      species: 'latias',
       types: 'Dragon / Psychic',
       cp: 2143,
       levelRange: '~20',
@@ -58,6 +61,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Drampa',
+      species: 'drampa',
       types: 'Normal / Dragon',
       cp: 1875,
       levelRange: '~24–25',
@@ -72,6 +76,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Tyrunt',
+      species: 'tyrunt',
       types: 'Rock / Dragon',
       cp: 1450,
       levelRange: '~17–18',
@@ -86,6 +91,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Latios',
+      species: 'latios',
       types: 'Dragon / Psychic',
       cp: 2143,
       levelRange: '~20',
@@ -100,6 +106,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Dragonite',
+      species: 'dragonite',
       types: 'Dragon / Flying',
       cp: 1612,
       levelRange: '~16–17',
@@ -114,6 +121,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Gible',
+      species: 'gible',
       types: 'Dragon / Ground',
       cp: 749,
       levelRange: '~24–25',
@@ -128,6 +136,7 @@ export const POKEMON: Record<string, Pokemon[]> = {
     },
     {
       name: 'Frigibax',
+      species: 'frigibax',
       types: 'Dragon / Ice',
       cp: 689,
       levelRange: '~17–18',
