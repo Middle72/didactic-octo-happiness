@@ -1112,7 +1112,8 @@ main {
 }
 
 .pokemon-search,
-.pokemon-type-filter {
+.pokemon-type-filter,
+.pokemon-raid-filter {
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border);
@@ -1127,8 +1128,15 @@ main {
   min-width: 180px;
 }
 
+.pokemon-raid-filter {
+  border-color: var(--poke-red);
+  color: var(--poke-red-dark);
+  font-weight: 700;
+}
+
 .pokemon-search:focus,
-.pokemon-type-filter:focus {
+.pokemon-type-filter:focus,
+.pokemon-raid-filter:focus {
   outline: none;
   border-color: var(--poke-red);
 }
@@ -1139,11 +1147,40 @@ main {
   white-space: nowrap;
 }
 
+.raid-eff-cell {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.raid-eff-2 {
+  color: #16a34a;
+}
+
+.raid-eff-1 {
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.raid-eff-0_5 {
+  color: #b45309;
+  opacity: 0.8;
+}
+
+.raid-eff-0 {
+  color: #777;
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+tr[data-raid-eff="2"] {
+  background: rgba(22, 163, 74, 0.07);
+}
+
 .pokemon-table td.pokemon-name-cell {
   font-weight: 700;
 }
 
-.pokemon-table td:last-child {
+.pokemon-table td.pokemon-notes-cell {
   white-space: normal;
   min-width: 18rem;
   opacity: 0.85;
