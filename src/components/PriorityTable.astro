@@ -1,0 +1,36 @@
+---
+import type { Priority } from '../data/priorities';
+
+interface Props {
+  priorities: Priority[];
+}
+
+const { priorities } = Astro.props;
+---
+{priorities.length > 0 && (
+  <div class="card priority-section">
+    <h2 class="priority-heading">🎯 Priority Moves</h2>
+    <div class="priority-table-wrap">
+      <table class="priority-table">
+        <thead>
+          <tr>
+            <th>Priority</th>
+            <th>Pokemon</th>
+            <th>Why It Matters</th>
+            <th>Action to Take</th>
+          </tr>
+        </thead>
+        <tbody>
+          {priorities.map(p => (
+            <tr>
+              <td class="priority-rank-cell"><span class="priority-rank">{p.rank}</span></td>
+              <td class="priority-pokemon-cell">{p.pokemon}</td>
+              <td>{p.whyItMatters}</td>
+              <td>{p.actionToTake}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
