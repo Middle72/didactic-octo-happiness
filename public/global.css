@@ -1003,6 +1003,74 @@ main {
   box-shadow: 0 2px 8px rgba(238, 21, 21, 0.35);
 }
 
+.priority-section {
+  margin-bottom: 1.5rem;
+  border-top: 4px solid var(--poke-red);
+}
+
+.priority-heading {
+  margin: 0 0 0.9rem;
+  font-size: 1.1rem;
+}
+
+.priority-table-wrap {
+  overflow-x: auto;
+}
+
+.priority-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.priority-table th,
+.priority-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.priority-table th {
+  opacity: 0.6;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.priority-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.priority-table tbody tr:hover {
+  background: rgba(238, 21, 21, 0.04);
+}
+
+.priority-rank-cell {
+  white-space: nowrap;
+}
+
+.priority-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--poke-red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.priority-pokemon-cell {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .pokemon-trainers {
   display: flex;
   flex-direction: column;

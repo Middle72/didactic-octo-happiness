@@ -2,14 +2,18 @@
 import Layout from '../../layouts/Layout.astro';
 import PokemonNav from '../../components/PokemonNav.astro';
 import PokemonTable from '../../components/PokemonTable.astro';
+import PriorityTable from '../../components/PriorityTable.astro';
 import Pokeball from '../../components/Pokeball.astro';
 import { POKEMON } from '../../data/pokemon';
+import { PRIORITIES } from '../../data/priorities';
 ---
 <Layout title="Kelly - Pokemon GO" description="Kelly's Pokemon GO collection and upgrade plans.">
   <section class="section pokemon-page">
     <h1><Pokeball class="spin-on-hover" /> Kelly</h1>
 
     <PokemonNav current="kelly" />
+
+    <PriorityTable priorities={PRIORITIES.kelly ?? []} />
 
     <div class="pokemon-trainers">
       <div class="card pokemon-trainer">
