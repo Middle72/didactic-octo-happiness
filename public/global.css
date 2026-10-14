@@ -1092,8 +1092,24 @@ main {
 .search-table {
   width: 100%;
   min-width: 720px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.85rem;
+}
+
+.search-table th:nth-child(1),
+.search-table td:nth-child(1) {
+  width: 27%;
+}
+
+.search-table th:nth-child(2),
+.search-table td:nth-child(2) {
+  width: 31%;
+}
+
+.search-table th:nth-child(3),
+.search-table td:nth-child(3) {
+  width: 42%;
 }
 
 .search-table th,
@@ -1102,6 +1118,7 @@ main {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 
 .search-table th {
@@ -1121,16 +1138,15 @@ main {
   background: rgba(238, 21, 21, 0.04);
 }
 
-.search-syntax-cell {
-  white-space: nowrap;
-}
-
-.search-syntax-cell code {
+.search-syntax-cell code,
+.search-steps code {
+  display: inline-block;
   background: var(--border);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
   font-size: 0.8rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow-wrap: break-word;
 }
 
 .search-steps {

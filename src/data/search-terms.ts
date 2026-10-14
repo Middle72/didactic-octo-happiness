@@ -6,6 +6,7 @@ export interface SearchTermRow {
 
 export interface SearchTermSection {
   heading: string;
+  useCaseHeader?: string;
   rows: SearchTermRow[];
 }
 
@@ -77,6 +78,78 @@ export const SEARCH_TERM_SECTIONS: SearchTermSection[] = [
         syntax: "mega3 & !megaevolve0",
         pulls: "Max Level (Level 3) Megas that are off their 3-day cooldown.",
         useCase: "Free Mega activation for Community Days or Raid Hours to maximize catch XL candies.",
+      },
+    ],
+  },
+  {
+    heading: "Identifying Top Pokemon & Keepers (Inspect & Tag)",
+    useCaseHeader: "Practical Use & Action",
+    rows: [
+      {
+        syntax: "4* & !#",
+        pulls: 'Uncategorized 100% IV perfect "Hundos".',
+        useCase: "Favorite immediately and tag as Hundo or Maxed. Never transfer.",
+      },
+      {
+        syntax: "3* & !# & !favorite",
+        pulls: "Unreviewed 3-Star Pokemon (82%–98% IVs).",
+        useCase: "Review stat distribution; keep specimens with 14–15 Attack for raids, then favorite or tag them.",
+      },
+      {
+        syntax: "0-1attack & 3-4defense & 3-4hp & cp-2500 & !# & !favorite",
+        pulls: "High-stat product PvP IV candidates (low Attack, high Defense/HP for Great & Ultra League).",
+        useCase: "Scan via appraisal or Poke Genie before binning, as low CP doesn't mean bad PvP stats.",
+      },
+      {
+        syntax: "0attack & 0defense & 0hp",
+        pulls: 'True "Nundos" (0% IVs).',
+        useCase: "Rarer than 100% IVs; favorite as collectors' trophies or transfer if you only care about battle viability.",
+      },
+      {
+        syntax: "shadow & 3*,4* & !# & !favorite",
+        pulls: "High-IV Shadow Pokemon (+20% attack bonus).",
+        useCase: "Top-tier raid attackers; lock these down before Rocket takeover events to TM away Frustration.",
+      },
+      {
+        syntax: "shiny,legendary,mythical,ultra beasts & !favorite",
+        pulls: "Unprotected ultra-rare / special Pokemon.",
+        useCase: "Safety check to favorite valuable catches before doing any mass purges.",
+      },
+      {
+        syntax: "dynamax,gigantamax & !# & !favorite",
+        pulls: "Untagged Max Battle assets.",
+        useCase: "Tag for Max Battles or check IVs for Power Spot defense.",
+      },
+    ],
+  },
+  {
+    heading: 'Cleanout & Safe Mass Transfer (The "Trash" Filters)',
+    useCaseHeader: "Practical Use & Action",
+    rows: [
+      {
+        syntax: "0*,1*,2* & !favorite & !# & !shiny & !shadow & !legendary & !mythical & !costume & !dynamax & !gigantamax",
+        pulls: "The Master Trash Purge: Low/mid IVs (under 82%), excluding any favorites, tags, shinies, shadows, legendaries, costumes, or dynamax.",
+        useCase: "Instant Mass Cleanup: Tap one, hit Select All, and transfer without risking any valuable assets.",
+      },
+      {
+        syntax: "0*,1* & !favorite & !# & !shiny & !shadow & !costume",
+        pulls: "Bottom-tier fodder (0–66% IVs) excluding protected classes.",
+        useCase: "Daily quick-dump when bag space is tight after a play session.",
+      },
+      {
+        syntax: "distance100- & !favorite & !#",
+        pulls: "Pokemon caught over 100 km away.",
+        useCase: "Guaranteed +1 Candy XL and 3 standard candies when traded to a local friend; trade first, then transfer what's left.",
+      },
+      {
+        syntax: "tradeevolve & !favorite & !#",
+        pulls: "Species with free trade evolutions (Machoke, Haunter, Kadabra, Graveler, Gurdurr, Boldore, Karrablast, Shelmet).",
+        useCase: "Tag for trading so your trade partner can evolve them for 0 candy.",
+      },
+      {
+        syntax: "!favorite & !# & year2016-2019",
+        pulls: "Old, untagged catches from 2016 to 2019.",
+        useCase: "Guaranteed or boosted Lucky Trade triggers; do not transfer—trade these for guaranteed Lucky Pokemon.",
       },
     ],
   },
