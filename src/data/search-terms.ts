@@ -120,6 +120,11 @@ export const SEARCH_TERM_SECTIONS: SearchTermSection[] = [
         pulls: "Untagged Max Battle assets.",
         useCase: "Tag for Max Battles or check IVs for Power Spot defense.",
       },
+      {
+        syntax: "count1 & !favorite",
+        pulls: "Species where you only have a single, untagged copy.",
+        useCase: "Safety check before mass-transferring duplicates; favorite these so a \"select all dupes\" purge can't accidentally catch your only copy of a species.",
+      },
     ],
   },
   {
