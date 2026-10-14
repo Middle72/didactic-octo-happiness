@@ -1071,6 +1071,81 @@ main {
   white-space: nowrap;
 }
 
+.search-section {
+  margin-bottom: 1.5rem;
+  border-top: 4px solid var(--poke-red);
+}
+
+.search-section:last-child {
+  margin-bottom: 0;
+}
+
+.search-heading {
+  margin: 0 0 0.9rem;
+  font-size: 1.1rem;
+}
+
+.search-table-wrap {
+  overflow-x: auto;
+}
+
+.search-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.search-table th,
+.search-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.search-table th {
+  opacity: 0.6;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.search-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.search-table tbody tr:hover {
+  background: rgba(238, 21, 21, 0.04);
+}
+
+.search-syntax-cell {
+  white-space: nowrap;
+}
+
+.search-syntax-cell code {
+  background: var(--border);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.search-steps {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.search-steps li {
+  margin-bottom: 0.4rem;
+}
+
+.search-steps li:last-child {
+  margin-bottom: 0;
+}
+
 .pokemon-trainers {
   display: flex;
   flex-direction: column;

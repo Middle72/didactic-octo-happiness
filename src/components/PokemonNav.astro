@@ -12,4 +12,5 @@ const { current } = Astro.props;
   {TRAINERS.map(t => (
     <a href={`/pokemon-go/${t.slug}`} class={current === t.slug ? 'active' : ''}>{t.name}</a>
   ))}
+  <a href="/pokemon-go/search-terms" class={current === 'search-terms' ? 'active' : ''}>Search Terms</a>
 </nav>
