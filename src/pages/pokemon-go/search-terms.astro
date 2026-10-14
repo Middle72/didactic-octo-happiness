@@ -23,7 +23,7 @@ import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
               <tr>
                 <th>Search Syntax</th>
                 <th>What It Pulls</th>
-                <th>Practical Use Case</th>
+                <th>{section.useCaseHeader ?? 'Practical Use Case'}</th>
               </tr>
             </thead>
             <tbody>
@@ -47,6 +47,21 @@ import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
         <li>Tap the Search Bar in your Pokemon storage.</li>
         <li>Tap See More in the top-right corner.</li>
         <li>Long-press any recent search under Recent to pin it into your Favorites tray.</li>
+      </ol>
+    </div>
+
+    <div class="card search-section">
+      <h2 class="search-heading">Recommended 3-Step Daily Routine</h2>
+      <ol class="search-steps">
+        <li>
+          Lock Keepers: Run <code>4* &amp; !favorite</code> and <code>3* &amp; !# &amp; !favorite</code> &rarr; star or tag the ones with 15 Attack.
+        </li>
+        <li>
+          Scan PvP / Trophies: Run <code>0-1attack &amp; 3-4defense &amp; 3-4hp &amp; cp-2500 &amp; !# &amp; !favorite</code> &rarr; tag any top league contenders.
+        </li>
+        <li>
+          Purge the Rest: Run the Master Trash Purge string &rarr; tap Select All &rarr; Transfer.
+        </li>
       </ol>
     </div>
   </section>
