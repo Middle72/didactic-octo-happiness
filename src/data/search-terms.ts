@@ -82,6 +82,27 @@ export const SEARCH_TERM_SECTIONS: SearchTermSection[] = [
     ],
   },
   {
+    heading: "Pokedex Completion & Evolution Search Terms",
+    useCaseHeader: "Practical Use & Action",
+    rows: [
+      {
+        syntax: "evolve & evolvenew",
+        pulls: "Pokemon with enough candy to evolve into a species not yet registered in your Pokedex.",
+        useCase: "Primary Pokedex-completion routine: evolve everyone on this list to fill in new entries.",
+      },
+      {
+        syntax: "evolve & evolvenew & !megaevolve",
+        pulls: "Same as above, but excludes anything also eligible for Mega Evolution.",
+        useCase: "Cleaner dex-completion filter when you don't want Mega-eligible Pokemon mixed into the results.",
+      },
+      {
+        syntax: "evolvequest",
+        pulls: "Pokemon eligible for a special quest/Field Research evolution method instead of standard candy evolution.",
+        useCase: "Catches alternate-evolution candidates (event quest lines, Buddy Adventure evolutions, etc.) that the regular evolve filter won't surface.",
+      },
+    ],
+  },
+  {
     heading: "Identifying Top Pokemon & Keepers (Inspect & Tag)",
     useCaseHeader: "Practical Use & Action",
     rows: [
