@@ -1162,6 +1162,115 @@ main {
   margin-bottom: 0;
 }
 
+.friend-section {
+  margin-bottom: 1.5rem;
+  border-top: 4px solid var(--poke-red);
+}
+
+.friend-section:last-child {
+  margin-bottom: 0;
+}
+
+.friend-source-note {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+
+.friend-table-wrap {
+  overflow-x: auto;
+}
+
+.friend-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.friend-table th,
+.friend-table td {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.friend-table th {
+  opacity: 0.6;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.friend-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.friend-table tbody tr:hover {
+  background: rgba(238, 21, 21, 0.04);
+}
+
+.friend-trainer-cell {
+  font-weight: 700;
+}
+
+.friend-code-cell {
+  padding: 0.3rem 0.5rem !important;
+}
+
+.copy-code-btn {
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  background: var(--border);
+  border: 1px solid transparent;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--fg);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.copy-code-btn:hover {
+  border-color: var(--poke-red);
+}
+
+.copy-code-btn.copied {
+  background: rgba(22, 163, 74, 0.15);
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.team-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.team-badge.team-valor {
+  background: var(--poke-red);
+}
+
+.team-badge.team-mystic {
+  background: var(--poke-blue);
+}
+
+.team-badge.team-instinct {
+  background: var(--poke-yellow);
+  color: #1a1a1a;
+}
+
+.team-badge.team-any {
+  background: #888;
+}
+
 .pokemon-trainers {
   display: flex;
   flex-direction: column;

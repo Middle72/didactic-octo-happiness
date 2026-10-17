@@ -1,0 +1,115 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PokemonNav from '../../components/PokemonNav.astro';
+import Pokeball from '../../components/Pokeball.astro';
+import { OUR_FRIEND_CODES, COMMUNITY_FRIEND_CODES } from '../../data/friend-codes';
+
+const TEAM_CLASS: Record<string, string> = {
+  Valor: 'team-valor',
+  Mystic: 'team-mystic',
+  Instinct: 'team-instinct',
+};
+---
+<Layout title="Friend Codes - Pokemon GO" description="Trainer friend codes for daily gifts and raids.">
+  <section class="section pokemon-page">
+    <h1><Pokeball class="spin-on-hover" /> Friend Codes</h1>
+    <p class="pokemon-subtitle">
+      Add your code below for daily gifts and raid invites. Tap a code to copy it.
+    </p>
+
+    <PokemonNav current="friend-codes" />
+
+    <div class="card friend-section">
+      <h2 class="search-heading">Our Trainer Codes</h2>
+      {OUR_FRIEND_CODES.length === 0 ? (
+        <p class="pokemon-empty">No codes added yet &mdash; tell Claude your friend code and team to get added here.</p>
+      ) : (
+        <div class="friend-table-wrap">
+          <table class="friend-table">
+            <thead>
+              <tr>
+                <th>Trainer</th>
+                <th>Friend Code</th>
+                <th>Team</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {OUR_FRIEND_CODES.map(c => (
+                <tr>
+                  <td class="friend-trainer-cell">{c.trainer}</td>
+                  <td class="friend-code-cell">
+                    <button type="button" class="copy-code-btn" data-code={c.code}>{c.code}</button>
+                  </td>
+                  <td>
+                    {c.team && <span class={`team-badge ${TEAM_CLASS[c.team] ?? 'team-any'}`}>{c.team}</span>}
+                  </td>
+                  <td>{c.notes ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+
+    <div class="card friend-section">
+      <h2 class="search-heading">Top Community Codes (Daily Gifts & Raids)</h2>
+      <p class="friend-source-note">
+        Top 100 community-submitted codes, sourced from pokemongofriendcodes.com and PokeBase on 2026-10-17.
+        Most posters are anonymous, so raid availability is frequently unknown &mdash; these are mainly good for
+        daily gift exchange. Codes on lists like this churn fast, so some may go stale.
+      </p>
+      <div class="friend-table-wrap">
+        <table class="friend-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Friend Code</th>
+              <th>Trainer</th>
+              <th>Team</th>
+              <th>Gifts</th>
+              <th>Raid</th>
+              <th>Posted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {COMMUNITY_FRIEND_CODES.map(c => (
+              <tr>
+                <td>{c.rank}</td>
+                <td class="friend-code-cell">
+                  <button type="button" class="copy-code-btn" data-code={c.code}>{c.code}</button>
+                </td>
+                <td class="friend-trainer-cell">{c.trainer || '—'}</td>
+                <td><span class={`team-badge ${TEAM_CLASS[c.team] ?? 'team-any'}`}>{c.team}</span></td>
+                <td>{c.gifts}</td>
+                <td>{c.raid}</td>
+                <td>{c.posted}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-code-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code ?? '';
+      try {
+        await navigator.clipboard.writeText(code.replace(/\s+/g, ''));
+      } catch {
+        return;
+      }
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1200);
+    });
+  });
+</script>
