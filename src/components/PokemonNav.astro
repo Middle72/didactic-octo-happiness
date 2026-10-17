@@ -13,4 +13,5 @@ const { current } = Astro.props;
     <a href={`/pokemon-go/${t.slug}`} class={current === t.slug ? 'active' : ''}>{t.name}</a>
   ))}
   <a href="/pokemon-go/search-terms" class={current === 'search-terms' ? 'active' : ''}>Search Terms</a>
+  <a href="/pokemon-go/friend-codes" class={current === 'friend-codes' ? 'active' : ''}>Friend Codes</a>
 </nav>
