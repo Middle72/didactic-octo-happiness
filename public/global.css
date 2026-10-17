@@ -1271,6 +1271,41 @@ main {
   background: #888;
 }
 
+.invite-check-cell {
+  white-space: nowrap;
+}
+
+.invite-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  opacity: 0.75;
+  user-select: none;
+}
+
+.invite-check {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #16a34a;
+  cursor: pointer;
+}
+
+.friend-table tbody tr.invite-sent {
+  background: rgba(22, 163, 74, 0.06);
+}
+
+.friend-table tbody tr.invite-sent .invite-check-label {
+  opacity: 1;
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.friend-table tbody tr.invite-sent td:not(.invite-check-cell) {
+  opacity: 0.6;
+}
+
 .pokemon-trainers {
   display: flex;
   flex-direction: column;

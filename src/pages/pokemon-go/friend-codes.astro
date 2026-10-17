@@ -32,11 +32,12 @@ const TEAM_CLASS: Record<string, string> = {
                 <th>Friend Code</th>
                 <th>Team</th>
                 <th>Notes</th>
+                <th>Invite Sent</th>
               </tr>
             </thead>
             <tbody>
               {OUR_FRIEND_CODES.map(c => (
-                <tr>
+                <tr data-code={c.code}>
                   <td class="friend-trainer-cell">{c.trainer}</td>
                   <td class="friend-code-cell">
                     <button type="button" class="copy-code-btn" data-code={c.code}>{c.code}</button>
@@ -45,6 +46,12 @@ const TEAM_CLASS: Record<string, string> = {
                     {c.team && <span class={`team-badge ${TEAM_CLASS[c.team] ?? 'team-any'}`}>{c.team}</span>}
                   </td>
                   <td>{c.notes ?? '—'}</td>
+                  <td class="invite-check-cell">
+                    <label class="invite-check-label">
+                      <input type="checkbox" class="invite-check" data-code={c.code} />
+                      <span>Sent</span>
+                    </label>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -71,11 +78,12 @@ const TEAM_CLASS: Record<string, string> = {
               <th>Gifts</th>
               <th>Raid</th>
               <th>Posted</th>
+              <th>Invite Sent</th>
             </tr>
           </thead>
           <tbody>
             {COMMUNITY_FRIEND_CODES.map(c => (
-              <tr>
+              <tr data-code={c.code}>
                 <td>{c.rank}</td>
                 <td class="friend-code-cell">
                   <button type="button" class="copy-code-btn" data-code={c.code}>{c.code}</button>
@@ -85,6 +93,12 @@ const TEAM_CLASS: Record<string, string> = {
                 <td>{c.gifts}</td>
                 <td>{c.raid}</td>
                 <td>{c.posted}</td>
+                <td class="invite-check-cell">
+                  <label class="invite-check-label">
+                    <input type="checkbox" class="invite-check" data-code={c.code} />
+                    <span>Sent</span>
+                  </label>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -110,6 +124,46 @@ const TEAM_CLASS: Record<string, string> = {
         btn.textContent = original;
         btn.classList.remove('copied');
       }, 1200);
+    });
+  });
+
+  const STORAGE_KEY = 'pogo-friend-codes-invited';
+
+  function loadInvited(): Record<string, boolean> {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveInvited(state: Record<string, boolean>) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      // ignore (private browsing, storage disabled, etc.)
+    }
+  }
+
+  const invited = loadInvited();
+
+  document.querySelectorAll<HTMLInputElement>('.invite-check').forEach(checkbox => {
+    const code = checkbox.dataset.code ?? '';
+    const row = checkbox.closest('tr');
+    if (invited[code]) {
+      checkbox.checked = true;
+      row?.classList.add('invite-sent');
+    }
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        invited[code] = true;
+        row?.classList.add('invite-sent');
+      } else {
+        delete invited[code];
+        row?.classList.remove('invite-sent');
+      }
+      saveInvited(invited);
     });
   });
 </script>
