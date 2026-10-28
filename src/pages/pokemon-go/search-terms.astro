@@ -3,6 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import PokemonNav from '../../components/PokemonNav.astro';
 import Pokeball from '../../components/Pokeball.astro';
 import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
+
+const lockKeepersSyntax1 = '4* & !favorite';
+const lockKeepersSyntax2 = '3* & !# & !favorite';
+const scanPvpSyntax = '0-1attack & 3-4defense & 3-4hp & cp-2500 & !# & !favorite';
 ---
 <Layout title="Search Terms - Pokemon GO" description="Handy in-game search syntax for managing Mega Evolutions.">
   <section class="section pokemon-page">
@@ -29,7 +33,9 @@ import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
             <tbody>
               {section.rows.map(row => (
                 <tr>
-                  <td class="search-syntax-cell"><code>{row.syntax}</code></td>
+                  <td class="search-syntax-cell">
+                    <button type="button" class="copy-code-btn" data-code={row.syntax}>{row.syntax}</button>
+                  </td>
                   <td>{row.pulls}</td>
                   <td>{row.useCase}</td>
                 </tr>
@@ -54,10 +60,10 @@ import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
       <h2 class="search-heading">Recommended 3-Step Daily Routine</h2>
       <ol class="search-steps">
         <li>
-          Lock Keepers: Run <code>4* &amp; !favorite</code> and <code>3* &amp; !# &amp; !favorite</code> &rarr; star or tag the ones with 15 Attack.
+          Lock Keepers: Run <button type="button" class="copy-code-btn" data-code={lockKeepersSyntax1}>{lockKeepersSyntax1}</button> and <button type="button" class="copy-code-btn" data-code={lockKeepersSyntax2}>{lockKeepersSyntax2}</button> &rarr; star or tag the ones with 15 Attack.
         </li>
         <li>
-          Scan PvP / Trophies: Run <code>0-1attack &amp; 3-4defense &amp; 3-4hp &amp; cp-2500 &amp; !# &amp; !favorite</code> &rarr; tag any top league contenders.
+          Scan PvP / Trophies: Run <button type="button" class="copy-code-btn" data-code={scanPvpSyntax}>{scanPvpSyntax}</button> &rarr; tag any top league contenders.
         </li>
         <li>
           Purge the Rest: Run the Master Trash Purge string &rarr; tap Select All &rarr; Transfer.
@@ -66,3 +72,23 @@ import { SEARCH_TERM_SECTIONS } from '../../data/search-terms';
     </div>
   </section>
 </Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-code-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code ?? '';
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch {
+        return;
+      }
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1200);
+    });
+  });
+</script>

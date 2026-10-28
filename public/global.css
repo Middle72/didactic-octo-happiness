@@ -1138,17 +1138,6 @@ main {
   background: rgba(238, 21, 21, 0.04);
 }
 
-.search-syntax-cell code,
-.search-steps code {
-  display: inline-block;
-  background: var(--border);
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  overflow-wrap: break-word;
-}
-
 .search-steps {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
@@ -1221,6 +1210,7 @@ main {
 }
 
 .copy-code-btn {
+  display: inline-block;
   font: inherit;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.8rem;
@@ -1230,6 +1220,8 @@ main {
   border-radius: 6px;
   cursor: pointer;
   color: var(--fg);
+  overflow-wrap: break-word;
+  text-align: left;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
