@@ -21,6 +21,7 @@ const scanPvpSyntax = '0-1attack & 3-4defense & 3-4hp & cp-2500 & !# & !favorite
     {SEARCH_TERM_SECTIONS.map(section => (
       <div class="card search-section">
         <h2 class="search-heading">{section.heading}</h2>
+        {section.note && <p class="friend-source-note">{section.note}</p>}
         <div class="search-table-wrap">
           <table class="search-table">
             <thead>
