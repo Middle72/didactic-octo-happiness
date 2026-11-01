@@ -6,11 +6,28 @@ export interface SearchTermRow {
 
 export interface SearchTermSection {
   heading: string;
+  note?: string;
   useCaseHeader?: string;
   rows: SearchTermRow[];
 }
 
 export const SEARCH_TERM_SECTIONS: SearchTermSection[] = [
+  {
+    heading: "Friends List Search Terms",
+    note: "These run in the search bar on your Friends List screen, not the Pokemon storage search bar used everywhere else on this page.",
+    rows: [
+      {
+        syntax: "interactable",
+        pulls: "Friends you haven't interacted with yet today (no gift sent or received).",
+        useCase: "Your daily checklist — work through this list so nobody gets missed before you run out of gifts.",
+      },
+      {
+        syntax: "giftable",
+        pulls: "Friends you currently have a gift available to send to, and haven't already sent one today.",
+        useCase: "The fastest way to burn through your gift stock each day without scrolling your whole friends list.",
+      },
+    ],
+  },
   {
     heading: "Individual Mega Search Terms",
     rows: [
